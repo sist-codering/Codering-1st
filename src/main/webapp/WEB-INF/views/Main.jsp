@@ -102,7 +102,7 @@
 				<div class="col-lg-12">
 					<h1 class="display-4 text-white mt-5 mb-2">CODEDING</h1>
 
-					<p class="lead mb-5 text-white-50">AAAAAAAAAAAAAAAAAAAAAAAAAA </p>
+					<p class="lead mb-5 text-white-50">FFFFFFFFFFFFFFFFFFFFFFFFFF</p>
 
 
 
