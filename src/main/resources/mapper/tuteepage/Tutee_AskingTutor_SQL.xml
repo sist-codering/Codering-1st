@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="tuteeAsking"> 
+	
+	<insert id="tutorInfo" parameterType="hashmap">/*tuteeAsking.tutorInfo*/	
+		INSERT INTO
+			TUTOR_INFO
+			(
+				TUTOR_ID
+				,MEMBER_ID
+				,TUTOR_NAME
+				,TELEPHONE
+				,INTRO
+			)
+		VALUES
+			(
+				TUTOR_INFO_SEQ.NEXTVAL
+				,#{MEMBER_ID}
+				,#{TUTOR_NAME}
+				,#{TELEPHONE}
+				,#{INTRO}
+			)		
+	</insert>
+	
+	<insert id="tutorCareer">/*tuteeAsking.tutorCareer*/
+		INSERT INTO
+			TUTOR_CAREER
+			(
+				CAREER_ID
+				,TUTOR_ID
+				,CAREER_START
+				,CAREER_END
+				,CAREER_CONTENT
+			)
+		VALUES
+			(
+				TUTOR_CAREER_SEQ.NEXTVAL
+				,TUTOR_INFO_SEQ.CURRVAL
+				,TO_DATE(#{CAREER_START},'YYYY-MM-DD')
+				,TO_DATE(#{CAREER_END},'YYYY-MM-DD')
+				,#{CAREER_CONTENT}
+			)		
+	</insert>
+	
+	<insert id="tutorInterest">/*tuteeAsking.tutorInterest*/
+		INSERT INTO
+			TUTOR_INTEREST
+			(
+				TUTOR_INTEREST_ID
+				,TUTOR_ID
+				,INTEREST_ID
+				,LEVEL_ID
+			)
+		VALUES
+			(
+				TUTOR_INTEREST_SEQ.NEXTVAL
+				,TUTOR_INFO_SEQ.CURRVAL
+				,#{INTEREST_ID}
+				,#{LEVEL_ID}
+			)	
+	</insert>
+	
+	<insert id="tutorCheck" parameterType="hashmap">
+		INSERT INTO
+			TUTOR_INTEREST
+			(
+				TUTOR_INTEREST_ID
+				,TUTOR_ID
+				,INTEREST_ID
+			)
+		VALUES
+			(
+				TUTOR_INTEREST_SEQ.NEXTVAL
+				,TUTOR_INFO_SEQ.CURRVAL
+				,#{INTEREST_ID}
+			)
+	</insert>
+	
+	<insert id="tutorLink">/*tuteeAsking.tutorLink*/
+		INSERT INTO
+			TUTOR_LINK
+			(
+				LINK_ID
+				,TUTOR_ID
+				,LINK_CAT_ID
+				,LINK_ADDR
+			)
+		VALUES
+			(
+				TUTOR_LINK_SEQ.NEXTVAL
+				,TUTOR_INFO_SEQ.CURRVAL
+				,#{LINK_CAT_ID}
+				,#{LINK_ADDR}
+			)			
+	</insert>
+
+	<update id="tuteeTelProf">/*tuteeAsking.tuteeTelProf*/
+		UPDATE
+			TUTEE
+		SET
+			PROF_PATH = #{PROF_PATH}
+		WHERE
+			MEMBER_ID = #{MEMBER_ID}
+	</update>
+
+</mapper>
+

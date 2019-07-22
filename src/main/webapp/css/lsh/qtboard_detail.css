@@ -1,0 +1,463 @@
+	@charset "UTF-8";
+
+/* --------------------------------------------------- 기본 layout css */
+
+/* 컨테이너 - 전체 감싸기 */
+.QT-flex-container {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+/* 컨테이너 - 헤더 */
+.QT-flex-container-header {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+
+}
+/* 컨테이너 - 바디 */
+.QT-flex-container-body {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	margin: 170px 10px 100px;
+}
+/* 컨테이너 - 푸터 */
+.QT-flex-container-footer {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+}
+
+/* 헤더 영역 */
+.QT-header {
+	display: flex;
+	height: 65px;
+	color: white;
+	background-color: #bec5cd;
+	border-bottom: 1px solid gray;
+}
+
+/* 헤더 - 탭 영역  */
+.QT-tab {
+	height: 70px;
+	box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+	background-color: #abc8f7;
+}
+
+/* 본문 영역 */
+.QT-flex-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 1200px;
+}
+
+/* 본문 - 상단 감싸기 */
+.QT-top-content {
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+}
+
+/* 본문 - 상단 영역 (전체 크기 지정) */
+.QT-topmenu {
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	border: 1px solid black;
+}
+/* 본문 - 하단 영역 (전체 크기 지정) */
+.QT-bottom-content {
+	display: flex;
+	flex-direction: column;
+	width: 80%;
+}
+
+/* 푸터 영역 */
+.QT-footer {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	border-top: 1px solid gray;
+	background-color: gray;
+	color: white;
+	flex-basis: 100%;
+}
+/* --------------------------------------------------- 기본 layout css */
+
+
+/* 게시글 본문 css 시작 -----------------------------------------------*/
+
+
+.QT-marginSub {
+	margin: 0 0 10px 30px;
+}
+
+
+
+.QT-marginEdit
+{
+	margin: 20px 0 0 10px;
+}
+
+.QT-marginDel
+{
+	margin: 20px 0 0 10px;
+}
+
+.QT-marginLike
+{
+	margin: 0 0 10px 10px;
+}
+
+.QT-marginReport
+{	
+	margin: 0 10px 10px 10px;
+}
+
+
+.QT-divTable {
+	display: table;
+	table-layout: fixed;
+	border-collapse: collapse;
+	width: 950px !important;
+	text-align: left;
+}
+
+.QT-floatL {
+	float: left; 
+}
+
+.QT-floatR {
+	float: right; 
+}
+
+
+/* float 풀어는 clear 속성 */
+.QT-clear
+{
+	clear: both;
+}
+
+.QT-styleNo {
+	font-size: 17px;
+	font-weight: bold;
+	color: #858796;
+}
+
+.QT-marginTable {
+	margin: 0 0 10px 0;
+}
+.QT-marginNT {
+	margin: 30px 0 0 30px;
+}
+.QT-marginNo {
+	margin: 0 0 0 30px;
+}
+.QT-marginTag {
+	margin: 0 0 0 10px;
+}
+
+.QT-divTableBody {
+	display: table-row-group;
+}
+
+.QT-divTableRow {
+	display: table-row;
+	border-top: 1px solid #999999;
+	border-bottom: 1px solid #999999;
+	height: 20%;
+}
+
+.QT-divTableHead {
+	display: block;
+	margin: 0 auto;
+	padding: 10px;
+	width: 90px;
+	background-color: #dedede;
+	font-size: 15px;
+	font-weight: bold;
+	text-align: center;
+	vertical-align: middle;
+}
+
+.QT-divTableRow .QT-divTableHead {
+	display: table-cell;
+	background-color: #fff;
+	color: #333;
+	font-weight: bold;
+	padding: 3px 10px;
+	width: 20%;
+	height: 70px;
+}
+
+.QT-divTableCell {
+	display: table-cell;
+	
+}
+
+.QT-divTableHeading {
+	background-color: #EEE;
+	display: table-header-group;
+	font-weight: bold;
+}
+
+.QT-divTableFoot {
+	background-color: #EEE;
+	display: table-footer-group;
+	font-weight: bold;
+}
+
+.QT-edit
+{
+	font-size: 13px;
+	font-weight: bold;
+	color: #bec5cd;
+}
+.QT-del
+{
+	font-size: 12px;
+	font-weight: bold;
+	color: #bec5cd;
+}
+
+
+.QT-block {
+	display: block;
+}
+
+.QT-inline {
+	display: inline;
+}
+
+.QT-inlineIM {
+	display: inline !Important;
+}
+
+
+.QT-inline-block {
+	display: inline-block;
+}
+
+.QT-blockIM {
+	display: block !Important;
+}
+
+
+.QT-flex-end {
+	display: flex;
+	justify-content: flex-end;
+}
+
+
+.QT-styleSub 
+{
+	font-size: 17px;
+	font-weight: bold;
+	color: #4f4f4f;
+}
+
+.QT-styleQTboardName
+{
+	font-size: 20px;
+    font-weight: bold;
+    margin: 0px 0px 60px 0px;
+    padding: 10px 10px 10px 10px;
+    display: inline-block;
+    border-bottom: 1px solid #858796;
+    border-top: 1px solid #858796;
+
+
+}
+
+/* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ→ 게시글 important style */
+.QT-marginContentbuttons
+{
+	margin: 0px 0px 20px 0px !important;
+}
+
+.QT-marginDate {
+	margin: 0 0 30px 30px !important;
+}
+
+.QT-marginTextarea {
+ 	margin: 50px 30px 50px 30px !important;
+}
+
+.QT-flexProfile
+{
+	display: flex !important;
+    flex-direction: row;
+    align-items: flex-end !important;
+}
+
+.QT-marginProfile
+{
+	margin: 0 30px 0 0 !important;
+}
+
+.QT-flexbetween
+{
+ 	display: flex !important;
+ 	flex-direction: row !important;
+ 	justify-content: space-between !important;
+ 	align-items: flex-end !important;
+}
+
+.QT-white {
+    display: table-row;
+    border-top: 1px solid #FFFFFF !important;
+    border-bottom: 1px solid #FFFFFF !important;
+}
+
+.QT-marginWriter {
+	margin: 0 10px 0 0 !important;
+}
+
+/*----------------------------------------------- 게시글 본문 css 끝 */
+
+
+/* 댓글 작성-수정 폼 css 시작 ----------------------------------------------- */
+.QT-styleProfile {
+	width: 50px;
+	height: 50px;
+	margin: 10px 15px 0 0;
+}
+
+
+
+.QT-marginWidthRegiTextArea
+{
+ 	width: 800px;
+ 	margin: 0px 10px -5px 0px;
+ 		
+}
+
+.QT-marginCommTextArea
+{
+	margin: 0px 0px 20px 0px; 
+}
+
+.QT-styleButton
+{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: flex-end !important;
+    width: 60px !important;
+}
+
+.QT-styleCancle
+{
+	display: block !important;
+	background-color: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+	margin: 0px 0px 5px 0px !important;
+}
+
+.QT-btn-purple
+{
+	background-color: #c655d2 !important;
+    border-color: #c655d2 !important;
+    color: #ffffff !important;
+}
+
+/* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ→ 댓글 important */
+.QT-marginCommForm
+{
+	margin: 20px 0px 0px 30px !important;
+}
+
+.QT-marginCommEditForm
+{
+	margin: 10px 10px 10px 100px !important;
+}
+
+.QT-marginWidthEditTextArea
+{
+	width: 700px;
+	margin: 0px 10px -5px 65px !important;
+}
+/* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ→ 버튼 style */
+.QT-styleCancle
+{
+ margin: 0 0 5px 0;
+}
+
+.QT-styleEditDel
+{
+	font-size: 12px;
+}
+.QT-btn-white
+{
+	background-color: #ffffff;
+    border-color: #000000;
+}
+.QT-btn-purple
+{
+	background-color: #c655d2 !important;
+    border-color: #c655d2 !important;
+    color: #ffffff !important;
+}
+.QT-btn-white
+{
+	background-color: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+}
+
+/*-------------------------------------------------- 댓글 작성-수정 폼 css 끝 */
+
+
+/*댓글-대댓글-내가쓴 글 작성후 출력화면 css 시작 ------------------------------ */
+.QT-marginComm
+{
+	margin: 20px 0px 0px 30px !important;
+}
+
+.QT-marginCommCont {
+	margin: 20px 0 0 65px !important;
+	
+}
+
+.QT-marginCommOneDepth
+{
+	margin: 20px 0px 0px 100px !important;
+}
+
+.QT-inlineImportant {
+	display: inline !Important;
+}
+
+.QT-styleBestCommYellow
+{
+	background: lightgoldenrodyellow;
+}
+
+.QT-styleMyCommGray
+{
+	background: #e8e8e8;
+}
+
+.QT-styleCommentReport
+{
+	font-size: 13px;
+/* 	font-weight: bold; */
+	color: #ababab;
+}
+
+.QT-marginCommButton
+{
+	margin: 20px 10px 10px 0px;
+}
+
+
+.QT-redColor
+{
+	color: "red";
+}
+
+
+/* ------------------------------ 댓글-대댓글-내가쓴 글 작성후 출력화면 css 끝*/

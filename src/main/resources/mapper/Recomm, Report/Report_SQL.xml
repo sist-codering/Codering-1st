@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="report">
+
+	<select id="boardCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			QTBOARD_POST_REP
+		WHERE
+			QT_ID = #{QT_ID}
+		AND
+			MEMBER_ID = #{MEMBER_ID}		
+	</select>
+
+	<select id="commentCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			QTBOARD_COMM_REP
+		WHERE
+			COMM_ID = #{COMM_ID}
+		AND
+			MEMBER_ID = #{MEMBER_ID}		
+	</select>	
+	
+	<select id="tutorCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			TUTOR_FAQ_REP
+		WHERE
+			FAQ_ID = #{FAQ_ID}
+		AND
+			MEMBER_ID = #{MEMBER_ID}		
+	</select>	
+	
+	<select id="tuteeCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			TUTEE_FAQ_REP
+		WHERE
+			FAQ_ID = #{FAQ_ID}
+		AND
+			MEMBER_ID = #{MEMBER_ID}		
+	</select>	
+	
+	<select id="tboardCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			TTBOARD_REP
+		WHERE
+			TT_ID = #{TT_ID}
+		AND
+			MEMBER_ID = #{MEMBER_ID}		
+	</select>
+	
+	<select id="tcommentCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			TTCOMM_REP
+		WHERE
+			COMM_ID = #{COMM_ID}
+		AND
+			MEMBER_ID = #{MEMBER_ID}		
+	</select>
+	
+	
+	
+	<insert id="board" parameterType="hashmap">
+		INSERT INTO QTBOARD_POST_REP
+			(
+				QT_POST_REP_ID
+				,REP_ID
+				,MEMBER_ID
+				,QT_ID
+				,REP_COMMENT
+			)
+		VALUES
+			(
+				QTBOARD_POST_REP_SEQ.NEXTVAL
+				,#{REP_ID}
+				,#{MEMBER_ID}
+				,#{QT_ID}
+				,#{REP_COMMENT}
+			)			
+	</insert>
+	
+	
+	<insert id="comm" parameterType="hashmap">
+		INSERT INTO QTBOARD_COMM_REP
+			(
+				QT_COMM_REP_ID
+				,REP_ID
+				,MEMBER_ID
+				,COMM_ID
+				,REP_COMMENT
+			)
+		VALUES
+			(
+				QTBOARD_COMM_REP_SEQ.NEXTVAL
+				,#{REP_ID}
+				,#{MEMBER_ID}
+				,#{COMM_ID}
+				,#{REP_COMMENT}				
+			)
+	</insert>
+	
+	<insert id="tutor" parameterType="hashmap">
+		INSERT INTO TUTOR_FAQ_REP
+			(
+				TUTOR_FAQ_REP_ID
+				,REP_ID
+				,MEMBER_ID
+				,FAQ_ID
+				,REP_COMMENT
+			)
+		VALUES
+			(
+				TUTOR_FAQ_REP_SEQ.NEXTVAL
+				,#{REP_ID}
+				,#{MEMBER_ID}
+				,#{FAQ_ID}
+				,#{REP_COMMENT}
+			)			
+	</insert>	
+	
+	<insert id="tutee" parameterType="hashmap">
+		INSERT INTO TUTEE_FAQ_REP
+			(
+				TUTEE_FAQ_REP_ID
+				,REP_ID
+				,MEMBER_ID
+				,FAQ_ID
+				,REP_COMMENT
+			)
+		VALUES
+			(
+				TUTEE_FAQ_REP_SEQ.NEXTVAL
+				,#{REP_ID}
+				,#{MEMBER_ID}
+				,#{FAQ_ID}
+				,#{REP_COMMENT}
+			)
+	</insert>
+	
+	<insert id="tboard" parameterType="hashmap">
+		INSERT INTO TTBOARD_REP
+			(
+				TTBOARD_REP_ID
+				,REP_ID
+				,MEMBER_ID
+				,TT_ID
+				,REP_COMMENT
+			)
+		VALUES
+			(
+				TTBOARD_REP_SEQ.NEXTVAL
+				,#{REP_ID}
+				,#{MEMBER_ID}
+				,#{TT_ID}
+				,#{REP_COMMENT}
+			)			
+	</insert>
+	
+	<insert id="tcomm" parameterType="hashmap">
+		INSERT INTO TTCOMM_REP
+			(
+				COMM_REP_ID
+				,REP_ID
+				,MEMBER_ID
+				,COMM_ID
+				,REP_CONTENT
+			)
+		VALUES
+			(
+				TTCOMM_REP_SEQ.NEXTVAL
+				,#{REP_ID}
+				,#{MEMBER_ID}
+				,#{COMM_ID}
+				,#{REP_CONTENT}
+			)
+	</insert>
+
+</mapper>
+
+

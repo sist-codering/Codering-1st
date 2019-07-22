@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="mainpage">
+
+	<select id="popularTutoring" parameterType="hashMap" resultType="java.util.HashMap">
+	
+		SELECT TUTORING_TUTOR_ID
+				,TUTOR_ID
+		        ,TITLE
+		        ,MIN_NUM
+		        ,MAX_NUM
+		        ,START_DATE
+		        ,ENTRY_COST
+		        ,THUMBNAIL_PATH
+		        ,REG_NAME
+		        ,WEEK
+		        ,PROF_PATH
+		        ,INTEREST_ID
+		        ,LEVEL_ID
+		        ,START_TIME
+		        ,END_TIME
+		        ,ENTIRE_PERIOD
+		FROM
+		(
+		SELECT  T.*
+		        ,ROW_NUMBER() OVER (ORDER BY MIN_NUM/MAX_NUM DESC) AS COUNT
+		        FROM TUTORING_TUTOR_VIEW T
+		        WHERE INTEREST_ID   = (SELECT INTEREST_ID
+		                     		   FROM TUTEE_INTEREST_VIEW
+		                               WHERE MEMBER_ID =#{MEMBER_ID}) AND LEVEL_ID = (SELECT LEVEL_ID
+		                                                                   FROM TUTEE_LEVEL_VIEW
+		                                                                   WHERE MEMBER_ID = #{MEMBER_ID}) AND REG_ID = (SELECT REG_ID
+		                                                        						  			          			FROM TUTEE
+		<![CDATA[                                                        						  			         			 WHERE MEMBER_ID=#{MEMBER_ID})
+		)WHERE COUNT<=3
+		]]>	
+	</select>
+	
+	
+	<select id="newTutoring" parameterType="hashMap" resultType="hashMap">
+		<![CDATA[
+		SELECT  TUTORING_TUTOR_ID
+				,TUTOR_ID
+		        ,TITLE
+		        ,MIN_NUM
+		        ,MAX_NUM
+		        ,START_DATE
+		        ,ENTRY_COST
+		        ,THUMBNAIL_PATH
+		        ,REG_NAME
+		        ,WEEK
+		        ,PROF_PATH
+		        ,INTEREST_ID
+		        ,LEVEL_ID
+		        ,START_TIME
+		        ,END_TIME
+		        ,ENTIRE_PERIOD  
+		FROM 
+		(
+		SELECT  *   
+		        FROM TUTORING_TUTOR_VIEW T
+		        WHERE INTEREST_ID   = (SELECT INTEREST_ID
+		                      FROM TUTEE_INTEREST_VIEW
+		                      WHERE MEMBER_ID = #{MEMBER_ID}) AND LEVEL_ID = (SELECT LEVEL_ID
+		                                                        FROM TUTEE_LEVEL_VIEW
+		                                                        WHERE MEMBER_ID = #{MEMBER_ID}) AND REG_ID = (SELECT REG_ID
+		                                                                                          FROM TUTEE
+		                                                                                          WHERE MEMBER_ID=#{MEMBER_ID})
+																							      ORDER BY TUTORING_TUTOR_ID DESC
+		)WHERE ROWNUM <=4
+		]]>	
+	</select>
+	
+	<select id="selectTutorCount" resultType="Integer">
+		SELECT 
+			COUNT(*) TUTOR_COUNT
+		FROM 
+			TUTORING_TUTOR
+	</select>
+	
+	<select id="selectTuteeCount" resultType="Integer">
+		SELECT 
+			COUNT(*) TUTEE_COUNT
+		FROM 
+			TUTORING_TUTEE
+	</select>
+	
+	<select id="selectInterestName" resultType="java.lang.String" parameterType="hashmap">
+		SELECT 
+			INTEREST_CAT
+		FROM
+			INTEREST
+		WHERE 
+			CATEGORIE_ID=1 AND INTEREST_ID=#{INTEREST_ID}
+		
+	</select>
+	
+	<select id="selectLevelName" resultType="java.lang.String" parameterType="hashmap">
+		SELECT
+			LEVEL_NAME
+		FROM
+			TECH_LEVEL
+		WHERE 
+			LEVEL_ID =#{LEVEL_ID}
+	</select>
+
+</mapper>

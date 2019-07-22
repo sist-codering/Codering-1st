@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="recomm">
+
+	<select id="boardCount" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*) 
+		FROM 
+			RECOMM_POST 
+		WHERE 
+			QT_ID = #{QT_ID}
+	</select>
+	
+	<select id="boardCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			RECOMM_POST
+		WHERE 
+			MEMBER_ID = #{MEMBER_ID}
+		AND 
+			TO_CHAR(RECOMM_DATE,'YYYY-MM-DD') 
+			= TO_CHAR(SYSDATE,'YYYY-MM-DD')						
+	</select>
+	
+	<insert id="board" parameterType="hashmap">
+		INSERT INTO	RECOMM_POST
+			( 
+				RECOMM_ID
+				,QT_ID
+				,MEMBER_ID
+			)
+		VALUES
+			(
+				RECOMM_POST_SEQ.NEXTVAL
+				,#{QT_ID}
+				,#{MEMBER_ID}
+			)	
+	</insert>
+	
+	<select id="commentCount" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			RECOMM_COMMENT 
+		WHERE 
+			COMM_ID = #{COMM_ID}
+	</select>
+	
+	<select id="commentCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			RECOMM_COMMENT
+		WHERE 
+			MEMBER_ID = #{MEMBER_ID}
+		AND 
+			TO_CHAR(RECOMM_DATE,'YYYY-MM-DD') 
+			= TO_CHAR(SYSDATE,'YYYY-MM-DD')		
+	</select>	
+		
+	<insert id="comment" parameterType="hashmap">
+		INSERT INTO RECOMM_COMMENT
+			( 
+				RECOMM_ID
+				,COMM_ID
+				,MEMBER_ID
+			)
+			VALUES
+			(
+				RECOMM_COMMENT_SEQ.NEXTVAL
+				,#{COMM_ID}
+				,#{MEMBER_ID}
+			)	
+	</insert>
+	
+</mapper>
+
+

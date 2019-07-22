@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tutorTutoringSearch">
+
+	<!-- 목록 조회 : 튜터 개설 인기 튜터링 찾기 목록 - TOP 3 -->
+	<select id="selectTutorTutoringSearchList" parameterType="hashmap" resultType="hashmap">
+		/* tutorTutoringSearch.selectTutorTutoringSearchList */
+		SELECT TUTORING_TUTOR_ID
+		       , TUTOR_ID
+		       , TITLE
+		       , MIN_NUM
+		       , MAX_NUM
+		       , START_DATE
+		       , TO_CHAR(ENTRY_COST, 'FM9,999,999') AS ENTRY_COST
+		       , THUMBNAIL_PATH
+		       , REG_NAME
+		       , WEEK
+		       , PROF_PATH
+		       , INTEREST_ID
+		       , LEVEL_ID
+		       , START_TIME
+		       , END_TIME
+		       , ENTIRE_PERIOD
+		  FROM (
+		    SELECT T.*
+		           , ROW_NUMBER() OVER(
+		         ORDER BY MIN_NUM / MAX_NUM DESC
+		    ) AS COUNT
+		      FROM TUTORING_TUTOR_VIEW T
+		     WHERE INTEREST_ID = (
+		        SELECT INTEREST_ID
+		          FROM TUTEE_INTEREST_VIEW
+		         WHERE MEMBER_ID = #{MEMBER_ID}
+		    )
+		       AND LEVEL_ID = (
+		        SELECT LEVEL_ID
+		          FROM TUTEE_LEVEL_VIEW
+		         WHERE MEMBER_ID = #{MEMBER_ID}
+		    )
+		       AND REG_ID = (
+		        SELECT REG_ID
+		          FROM TUTEE
+		         WHERE MEMBER_ID = #{MEMBER_ID}
+		    )
+		)
+		 WHERE COUNT <![CDATA[ <= ]]> 3
+	</select>
+	
+	<!-- Filter1 -->
+	<select id="selectTutorTutoringFilterList1" parameterType="hashmap" resultType="hashmap">
+		/* tutorTutoringSearch.selectTutorTutoringFilterList1 */
+		SELECT A.REG_ID
+			, A.REG_NAME
+			, A.REG_LAT
+			, A.REG_LONG
+		FROM REGION A
+		ORDER BY A.REG_ID
+	</select>
+	
+	<!-- Filter2 -->
+	<select id="selectTutorTutoringFilterList2" parameterType="hashmap" resultType="hashmap">
+		/* tutorTutoringSearch.selectTutorTutoringFilterList2 */
+		SELECT A.INTEREST_ID
+			, A.INTEREST_CAT
+			, A.CATEGORIE_ID
+		FROM INTEREST A
+		ORDER BY A.INTEREST_ID
+	</select>
+	
+	<!-- Filter3 -->
+	<select id="selectTutorTutoringFilterList3" parameterType="hashmap" resultType="hashmap">
+		/* tutorTutoringSearch.selectTutorTutoringFilterList3 */
+		SELECT *
+		FROM (
+				SELECT 1 AS TIME_ID, '00:00' AS TIME_VAL FROM DUAL
+				UNION ALL SELECT  2, '01:00' FROM DUAL
+				UNION ALL SELECT  3, '02:00' FROM DUAL
+				UNION ALL SELECT  4, '03:00' FROM DUAL
+				UNION ALL SELECT  5, '04:00' FROM DUAL
+				UNION ALL SELECT  6, '05:00' FROM DUAL
+				UNION ALL SELECT  7, '06:00' FROM DUAL
+				UNION ALL SELECT  8, '07:00' FROM DUAL
+				UNION ALL SELECT  9, '08:00' FROM DUAL
+				UNION ALL SELECT 10, '09:00' FROM DUAL
+				UNION ALL SELECT 11, '10:00' FROM DUAL
+				UNION ALL SELECT 12, '11:00' FROM DUAL
+				UNION ALL SELECT 13, '12:00' FROM DUAL
+				UNION ALL SELECT 14, '13:00' FROM DUAL
+				UNION ALL SELECT 15, '14:00' FROM DUAL
+				UNION ALL SELECT 16, '15:00' FROM DUAL
+				UNION ALL SELECT 17, '16:00' FROM DUAL
+				UNION ALL SELECT 18, '17:00' FROM DUAL
+				UNION ALL SELECT 19, '18:00' FROM DUAL
+				UNION ALL SELECT 20, '19:00' FROM DUAL
+				UNION ALL SELECT 21, '20:00' FROM DUAL
+				UNION ALL SELECT 22, '21:00' FROM DUAL
+				UNION ALL SELECT 23, '22:00' FROM DUAL
+				UNION ALL SELECT 24, '23:00' FROM DUAL
+		) A
+		ORDER BY 1
+	</select>
+	
+	<!-- 목록 건수 조회 : 튜터의 튜터링 찾기 Paging -->
+	<select id="selectTutorTutoringSearchListCnt2" parameterType="hashmap" resultType="int">
+		/* tutorTutoringSearch.selectTutorTutoringSearchListCnt2 */
+		SELECT COUNT(*)
+		FROM TUTORING_TUTOR_VIEW A
+		WHERE 1=1
+		<if test="SCH_REG_ID_ARR != null and SCH_REG_ID_ARR.length != 0">
+			AND A.REG_ID IN
+			<foreach collection="SCH_REG_ID_ARR" item="one" open="(" close=")" separator=",">
+				#{one}
+			</foreach>
+		</if>
+		<if test="SCH_INTEREST_ID_ARR != null and SCH_INTEREST_ID_ARR.length != 0">
+			AND A.INTEREST_ID IN
+			<foreach collection="SCH_INTEREST_ID_ARR" item="one" open="(" close=")" separator=",">
+				#{one}
+			</foreach>
+		</if>
+		<if test="SCH_TIME != null and SCH_TIME !=''">
+			<![CDATA[
+			AND #{SCH_TIME} BETWEEN A.START_TIME AND A.END_TIME 
+			]]>
+		</if>
+		<if test="SCH_ENTRY_COST != null and SCH_ENTRY_COST !=''">
+			<![CDATA[
+			AND A.ENTRY_COST <= #{SCH_ENTRY_COST}
+			]]>
+		</if>
+	</select>
+	
+	<!-- 목록 조회 : 튜터 개설 튜터링 찾기 목록  -->
+	<select id="selectTutorTutoringSearchList2" parameterType="hashmap" resultType="hashmap">
+		/* tutorTutoringSearch.selectTutorTutoringSearchList2 */
+		SELECT *
+		FROM (
+		 SELECT ROW_NUMBER() OVER(ORDER BY TUTORING_TUTOR_ID) AS RNUM
+			 , A.TITLE
+			 , A.MIN_NUM
+			 , A.MAX_NUM
+			 , TO_CHAR(A.START_DATE, 'YYYY-MM-DD') AS START_DATE
+			 , A.ENTRY_COST
+			 , A.THUMBNAIL_PATH
+			 , A.REG_NAME
+			 , A.WEEK
+			 , A.REG_ID
+			 , A.INTEREST_ID
+			 , A.START_TIME
+			 , A.END_TIME
+		 FROM TUTORING_TUTOR_VIEW A
+		WHERE 1=1
+		<if test="SCH_REG_ID_ARR != null and SCH_REG_ID_ARR.length != 0">
+			AND A.REG_ID IN
+			<foreach collection="SCH_REG_ID_ARR" item="one" open="(" close=")" separator=",">
+				#{one}
+			</foreach>
+		</if>
+		<if test="SCH_INTEREST_ID_ARR != null and SCH_INTEREST_ID_ARR.length != 0">
+			AND A.INTEREST_ID IN
+			<foreach collection="SCH_INTEREST_ID_ARR" item="one" open="(" close=")" separator=",">
+				#{one}
+			</foreach>
+		</if>
+		<if test="SCH_TIME != null and SCH_TIME !=''">
+			<![CDATA[
+			AND #{SCH_TIME} BETWEEN A.START_TIME AND A.END_TIME 
+			]]>
+		</if>
+		<if test="SCH_ENTRY_COST != null and SCH_ENTRY_COST !=''">
+			<![CDATA[
+			AND A.ENTRY_COST <= #{SCH_ENTRY_COST}
+			]]>
+		</if>
+	)
+	WHERE 1=1
+	AND RNUM BETWEEN #{rowNumStart} AND #{rowNumEnd}
+	</select>
+	
+</mapper>

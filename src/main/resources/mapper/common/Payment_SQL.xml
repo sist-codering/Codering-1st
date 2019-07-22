@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="payment">
+	
+	<select id="selectTuteeAuth" resultType="hashmap" parameterType="hashmap">
+	
+		<!-- 튜티가 추가정보를 입력했는지 확인 -->
+		SELECT 
+			COUNT(*) AS TUTEE_AUTH
+		FROM
+		(
+			SELECT *
+			FROM 
+				TUTEE T JOIN TUTEE_INTEREST TI
+			ON T.MEMBER_ID = TI.MEMBER_ID AND PHONENUM IS NOT NULL AND REG_ID IS NOT NULL AND T.MEMBER_ID=#{MEMBER_ID}
+		)
+		
+	</select>
+	
+	
+	<select id="selectTutoringTutor" resultType="hashmap" parameterType="hashmap">
+		SELECT TUTORING_TUTOR_ID
+	        ,TUTOR_ID
+	        ,TITLE
+	        ,MIN_NUM
+	        ,MAX_NUM
+	        ,START_DATE
+	        ,ENTRY_COST
+	        ,THUMBNAIL_PATH
+	        ,REG_NAME
+	        ,WEEK
+	        ,PROF_PATH
+	        ,INTEREST_ID
+	        ,LEVEL_ID
+	        ,START_TIME
+	        ,END_TIME
+	        ,ENTIRE_PERIOD
+		FROM 
+			TUTORING_TUTOR_VIEW
+		WHERE 
+			TUTORING_TUTOR_ID = #{TUTORING_TUTOR_ID}
+	</select>
+	
+	<select id="selectCouponCount" resultType="hashmap" parameterType="hashmap">
+		SELECT 
+			COUNT(*) AS COU_COUNT
+		FROM 
+			ISSUE_COUPON
+		WHERE
+			 MEMBER_ID=#{MEMBER_ID}
+	</select>	
+	
+	<select id="selectCoupon" resultType="hashmap" parameterType="hashmap">
+		SELECT 
+			C.COU_ID,C.COU_NAME,ISSU_ID
+		FROM 
+			ISSUE_COUPON I JOIN COUPON C
+		ON I.COU_ID = C.COU_ID AND I.MEMBER_ID =#{MEMBER_ID} AND ISSU_ID NOT IN(SELECT ISSU_ID
+                                                       							 FROM TUTORING_ENROLL
+                                                        						 WHERE MEMBER_ID=#{MEMBER_ID})
+	</select>
+	
+	<delete id="deleteCoupon" parameterType="hashmap">
+		DELETE
+		FROM 
+			ISSUE_COUPON
+		WHERE 
+			ISSU_ID = #{ISSU_ID}
+	</delete>
+	
+	<insert id="insertTutoringEnroll" parameterType="hashmap">
+	<![CDATA[
+		INSERT INTO TUTORING_ENROLL
+			(ENROLL_ID
+			,TUTORING_TUTOR_ID
+			,MEMBER_ID
+			,ENROLL_DATE
+			,ISSU_ID
+			,PAYMENT
+			,DISCOUNT_COST
+			,PAYMENT_COST)
+		VALUES 
+			(TUTORING_ENROLL_SEQ.NEXTVAL
+			,#{TUTORING_TUTOR_ID}
+			,#{MEMBER_ID}
+			,SYSDATE
+			,#{ISSU_ID}
+			,#{ENTRY_COST}
+			,(SELECT COU_PRICE
+			 FROM COUPON
+			 WHERE COU_ID=#{COU_ID}),#{ENTRY_COST}-(SELECT COU_PRICE FROM COUPON WHERE COU_ID=#{COU_ID}))
+	]]>
+	</insert>
+	
+	
+</mapper>

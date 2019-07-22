@@ -1,0 +1,528 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="tuteematching"> 
+	
+	<!-- 튜티 마이페이지 > 개설 튜터링 > 목록 -->
+	<select id="openList" parameterType="hashmap" resultType="hashmap">
+		SELECT T.TUTORING_TITLE
+			 , T.TUTORING_TUTEE_ID
+		     , (SELECT 
+		     		COUNT(*)
+		        FROM 
+		        	TUTORING_RESERVATION R
+		        WHERE 
+		        	T.MEMBER_ID = #{MEMBER_ID}
+		          AND 
+		          	T.TUTORING_TUTEE_ID = R.TUTORING_TUTEE_ID) AS RESERV_COUNT
+		     , (SELECT 
+		     		COUNT(*)
+		        FROM 
+		        	TUTOR_INVITE I
+		        WHERE 
+		        	T.MEMBER_ID = #{MEMBER_ID}
+		          AND 
+		          	T.TUTORING_TUTEE_ID = I.TUTORING_TUTEE_ID) AS INVITE_COUNT
+		     , (SELECT 
+		     		COUNT(*)
+		        FROM 
+		        	TUTOR_APPLY A
+		        WHERE 
+		        	T.MEMBER_ID = #{MEMBER_ID}
+		          AND 
+		          	T.TUTORING_TUTEE_ID = A.TUTORING_TUTEE_ID) AS APPLY_COUNT
+		FROM 
+			TUTORING_TUTEE T
+		WHERE
+			T.MEMBER_ID = #{MEMBER_ID}
+		ORDER BY 
+			T.UPLOAD_DATE
+			
+	</select>
+	
+	
+	<!-- 초대/지원 튜터 목록 조회 -->
+	<select id="tutorList" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			F.TUTOR_NAME
+			, F.INTRO
+			, I.MACH_LV_ID
+			, E.PROF_PATH
+			, I.TUTORING_TUTEE_ID
+			, TO_CHAR(I.INVITE_DATE, 'YYYY-MM-DD') AS SUBDATE
+			, F.TUTOR_ID
+			, I.INVITE_ID AS SUBID
+		FROM 
+			TUTOR_INFO F
+			, TUTOR_INVITE I
+			, TUTEE E
+		WHERE 
+			I.TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID}
+		  AND 
+		  	F.MEMBER_ID = E.MEMBER_ID
+		  AND 
+		  	F.TUTOR_ID = I.TUTOR_ID
+		UNION
+		SELECT 
+			F.TUTOR_NAME
+			, F.INTRO
+			, A.MACH_LV_ID
+			, E.PROF_PATH
+			, A.TUTORING_TUTEE_ID
+			, TO_CHAR(A.APPLY_DATE, 'YYYY-MM-DD') AS SUBDATE
+			, F.TUTOR_ID
+			, A.APPLY_ID AS SUBID
+		FROM 
+			TUTOR_INFO F
+			, TUTOR_APPLY A
+			, TUTEE E
+		WHERE 
+			A.TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID}
+		  AND 
+		  	F.TUTOR_ID = A.TUTOR_ID
+		  AND 
+		  	F.MEMBER_ID = E.MEMBER_ID
+		  AND 
+		  	A.MACH_LV_ID !=4
+		ORDER BY SUBDATE
+	</select>
+	
+	
+	<!-- 초대/지원 튜터의 언어/레벨 조회 -->
+	<select id="tutorLang" parameterType="hashmap" resultType="hashmap">
+	
+		SELECT 
+			I.INTEREST_CAT
+			, L.LEVEL_NAME
+			, N.TUTOR_ID
+		FROM 
+			TUTOR_INTEREST N
+			, INTEREST I
+			, TECH_LEVEL L
+		WHERE 
+			N.TUTOR_ID 
+				IN 
+					(SELECT 
+						F.TUTOR_ID
+		            FROM 
+		            	TUTOR_INFO F
+		            	, TUTOR_INVITE I
+		            	, TUTEE E
+		            WHERE 
+		            	I.TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID}
+		              AND 
+		            	F.MEMBER_ID = E.MEMBER_ID
+		              AND 
+		              	F.TUTOR_ID = I.TUTOR_ID
+		            UNION
+		            SELECT 
+		            	F.TUTOR_ID
+		            FROM 
+		            	TUTOR_INFO F
+		            	, TUTOR_APPLY A
+		            	, TUTEE E
+		            WHERE 
+		            	A.TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID}
+		              AND 
+		              	F.TUTOR_ID = A.TUTOR_ID
+		              AND 
+		              	F.MEMBER_ID = E.MEMBER_ID
+		              AND 
+		              	A.MACH_LV_ID ! = 4)
+		  AND 
+		  	N.INTEREST_ID = I.INTEREST_ID
+		  AND 
+		  	N.LEVEL_ID = L.LEVEL_ID
+		ORDER BY 
+			N.TUTOR_ID
+			, N.INTEREST_ID
+	
+	</select>
+	
+	<!-- 지원 튜터 수락 시 -->
+	<update id="applyAccept" parameterType="hashmap" >
+		UPDATE 
+			TUTOR_APPLY
+		SET 
+			MACH_LV_ID = 6
+		WHERE 
+			APPLY_ID = #{APPLY_ID}
+	</update>
+	
+	
+	<!-- 지원 튜터 거절 시 -->
+	<update id="applyRefuse" parameterType="hashmap" >
+		UPDATE 
+			TUTOR_APPLY
+		SET 
+			MACH_LV_ID = 4
+		WHERE 
+			APPLY_ID = #{APPLY_ID}
+	</update>
+	
+	
+	<!-- 거절한 튜터를 초대 튜터 목록에서 삭제 시 -->
+	<!-- 01. 자식테이블(INVITE_BOARD)에서 해당 레코드 삭제 -->
+	<delete id="inviteDelete01" parameterType="hashmap" >
+		DELETE
+		FROM 
+			INVITE_BOARD
+		WHERE 
+			INVITE_ID = #{INVITE_ID}
+	</delete>	
+	
+	<!-- 02. 부모테이블(TUTOR_INVITE) 해당 레코드 삭제 -->
+	<delete id="inviteDelete02" parameterType="hashmap" >
+		DELETE
+		FROM 
+			TUTOR_INVITE
+		WHERE 
+			INVITE_ID = #{INVITE_ID}
+	</delete>
+	
+	<!-- 초대튜터 대화 메시지 조회 -->
+	<select id="inviteMsg" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+		    B.WRITER
+		    , E.PROF_PATH
+		    , B.CONTENT
+		    , TO_CHAR(B.WRITEDATE, 'YYYY-MM-DD') AS WRITEDATE
+		    , B.WRITEDATE
+		    , T.TUTORING_TUTEE_ID
+		    , T.TUTORING_TITLE
+		    , B.INVITE_BD_ID
+		    , B.READCHECK
+		    , I.INVITE_ID
+		    , I.MACH_LV_ID
+		FROM 
+		    INVITE_BOARD B 
+		        JOIN TUTOR_INVITE I 
+		            ON B.INVITE_ID = I.INVITE_ID
+		        JOIN TUTOR_INFO F 
+		            ON I.TUTOR_ID = F.TUTOR_ID
+		        JOIN TUTEE E 
+		            ON F.MEMBER_ID = E.MEMBER_ID
+		        JOIN TUTORING_TUTEE T 
+		            ON I.TUTORING_TUTEE_ID = T.TUTORING_TUTEE_ID
+		WHERE 
+		    I.INVITE_ID = ${INVITE_ID}
+		ORDER BY 
+		    B.WRITEDATE
+	</select>
+	
+	
+	<!-- 초대튜터 읽음처리 -->
+	<update id="updateInviteReadcheck">
+	
+		UPDATE INVITE_BOARD
+		SET READCHECK = 0
+		WHERE INVITE_ID = ${INVITE_ID}
+	
+	</update>
+	
+	
+	<!-- 지원튜터 대화 메시지 조회 -->
+	<select id="applyMsg" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			B.WRITER
+		    , E.PROF_PATH
+		    , B.CONTENT
+		    , TO_CHAR(B.WRITEDATE, 'YYYY-MM-DD') AS WRITEDATE
+		    , B.WRITEDATE
+		    , T.TUTORING_TUTEE_ID
+		    , T.TUTORING_TITLE
+		    , B.APPLY_BD_ID
+		    , B.READCHECK
+		    , A.APPLY_ID
+		    , A.MACH_LV_ID			 
+		FROM 
+		    APPLY_BOARD B 
+		        JOIN TUTOR_APPLY A
+		            ON B.APPLY_ID = A.APPLY_ID
+		        JOIN TUTOR_INFO F 
+		            ON A.TUTOR_ID = F.TUTOR_ID
+		        JOIN TUTEE E 
+		            ON F.MEMBER_ID = E.MEMBER_ID
+		        JOIN TUTORING_TUTEE T 
+		            ON A.TUTORING_TUTEE_ID = T.TUTORING_TUTEE_ID
+		WHERE 
+		    A.APPLY_ID = #{APPLY_ID}
+		ORDER BY 
+		    B.WRITEDATE
+	</select>
+	
+	
+	<!-- 지원튜터 읽음처리 -->
+	<update id="updateApplyReadcheck">
+	
+		UPDATE APPLY_BOARD
+		SET READCHECK = 0
+		WHERE APPLY_ID = ${APPLY_ID}
+	
+	</update>
+	
+	
+	<!-- 초대튜터와 대화 메시지 등록 -->
+	<insert  id="sendMsgInvite" parameterType="hashmap">
+		INSERT 
+			INTO 
+				INVITE_BOARD
+					(INVITE_BD_ID
+					, INVITE_ID
+					, WRITER
+					, CONTENT
+					, WRITEDATE)
+			VALUES
+				(INVITE_BOARD_SEQ.NEXTVAL
+				, #{INVITE_ID}
+				, #{NICKNAME}
+				, #{CONTENT}
+				, SYSDATE)
+	</insert>
+	
+	
+	<!-- 지원튜터와 대화 메시지 등록 -->
+	<insert  id="sendMsgApply" parameterType="hashmap">
+		INSERT 
+			INTO 
+				APPLY_BOARD
+					(APPLY_BD_ID
+					, APPLY_ID
+					, WRITER
+					, CONTENT
+					, WRITEDATE)
+			VALUES
+				(APPLY_BOARD_SEQ.NEXTVAL
+				, #{APPLY_ID}
+				, #{NICKNAME}
+				, #{CONTENT}
+				, SYSDATE)
+	</insert>
+	
+	
+	<!-- 초대튜터와 확정버튼 클릭 시 -->
+	<update id="confirmInvite" parameterType="hashmap">
+		UPDATE 
+			TUTOR_INVITE
+		SET MACH_LV_ID = 
+            (CASE MACH_LV_ID WHEN 5 THEN 7
+                             WHEN 9 THEN 11
+                             ELSE 1 END)      
+		WHERE 
+			INVITE_ID = ${INVITE_ID}
+				
+	</update>
+	
+	<!-- 지원튜터와 확정버튼 클릭 시 -->
+	<update id="confirmApply" parameterType="hashmap">
+		UPDATE 
+			TUTOR_APPLY
+		SET MACH_LV_ID = 
+            (CASE MACH_LV_ID WHEN 6 THEN 8
+                             WHEN 10 THEN 12
+                             ELSE 1 END)      
+		WHERE 
+			APPLY_ID = ${APPLY_ID}
+				
+	</update>
+	
+	<!-- 튜티 개설튜터링 문의관리 -->
+	<!-- 문의 목록 -->
+	<select id="qnaList" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			S.PROCESS
+			, S.FAQ_CONTENT
+			, T.NICKNAME
+			, TO_CHAR(S.FAQ_DATE, 'YYYY-MM-DD') AS FAQ_DATE
+			, S.TUTORING_TUTEE_ID
+			, (CASE WHEN 
+			        S.FAQ_ID 
+			        IN
+			        (  SELECT 
+			                X.FAQ_ID
+			           FROM 
+			                TUTEE_FAQ X
+			           WHERE 
+			                EXISTS (SELECT 
+			                            'Z' 
+			                        FROM 
+			                            TUTEE_FAQ Y
+			                        WHERE 
+			                            X.FAQ_ID = Y.PAR_FAQ_ID))
+			                        THEN 
+			                            TO_CHAR(S.FAQ_DATE, 'YYYY-MM-DD')
+			                        ELSE 
+			                            '' 
+			                        END) AS ANSWERDATE
+			, S.FAQ_ID
+			FROM 
+			TUTEE T
+			, TUTORING_TUTEE E
+			, (SELECT 
+			        (CASE WHEN 
+			            F.FAQ_ID IN
+			         
+			            (  SELECT 
+			                    X.FAQ_ID
+			               FROM 
+			                    TUTEE_FAQ X
+			               WHERE 
+			                    EXISTS (SELECT 
+			                                'Z' 
+			                            FROM 
+			                                TUTEE_FAQ Y
+			                            WHERE 
+			                                X.FAQ_ID = Y.PAR_FAQ_ID))
+			        THEN 
+			            '답변완료'
+			        ELSE 
+			            '답변요청' 
+			        END) AS PROCESS
+			         , F.MEMBER_ID
+			         , F.FAQ_CONTENT
+			         , F.FAQ_DATE
+			         , F.FAQ_ID
+			         , F.TUTORING_TUTEE_ID
+			   FROM 
+			        TUTEE_FAQ F
+			   WHERE 
+			        F.PAR_FAQ_ID IS NULL
+			   ) S
+			WHERE 
+			   S.TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID}
+			   AND 
+			   T.MEMBER_ID = S.MEMBER_ID
+			GROUP BY S.PROCESS, S.FAQ_CONTENT, T.NICKNAME, FAQ_DATE, S.TUTORING_TUTEE_ID, S.FAQ_ID
+			ORDER BY 
+			   FAQ_DATE DESC
+			
+
+
+	</select>
+	
+	<!-- 문의 상세 페이지 -->
+	<select id="qnaPage" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			T.PROF_PATH
+			, T.NICKNAME
+			, S.FAQ_DATE
+			, S.FAQ_CONTENT
+			, S.FAQ_ID
+			, S.TUTORING_TUTEE_ID
+			, S.PAR_FAQ_ID
+			, (CASE 
+		    			S.FAQ_ID 
+		    		 WHEN 
+		    		 	(  SELECT 
+		    		 			X.FAQ_ID
+                           FROM 
+                           		TUTEE_FAQ X
+                           WHERE 
+                           		EXISTS (SELECT 
+                           					'Z' 
+                                        FROM 
+                                        	TUTEE_FAQ Y
+                                        WHERE 
+                                        	X.FAQ_ID = Y.PAR_FAQ_ID
+                                          AND 
+                                            X.FAQ_ID = #{FAQ_ID}))
+                    THEN 
+                    	'답변완료'
+                    ELSE 
+                    	'답변요청' 
+                    END) AS PROCESS
+		FROM 
+			TUTEE T
+		    , TUTEE_FAQ S
+		WHERE 
+			S.MEMBER_ID = T.MEMBER_ID
+		  AND 
+		  	S.FAQ_ID = #{FAQ_ID}
+	</select>
+	
+	
+	<!-- 문의 답변 조회 -->
+	<select id="qnaAnswer" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			T.PROF_PATH
+			, T.NICKNAME
+			, S.FAQ_DATE
+			, S.FAQ_CONTENT
+			, S.FAQ_ID
+		    , S.PAR_FAQ_ID
+		FROM 
+			TUTEE T
+		    , ( SELECT 
+		    		F.MEMBER_ID
+		            , F.FAQ_CONTENT
+		            , F.FAQ_DATE
+		            , F.FAQ_ID
+		            , F.PAR_FAQ_ID
+		        FROM 
+		        	TUTEE_FAQ F
+		        WHERE 
+		        	F.PAR_FAQ_ID IS NOT NULL) S
+		WHERE 
+			S.MEMBER_ID = T.MEMBER_ID
+		  AND 
+		  	S.PAR_FAQ_ID = #{FAQ_ID}
+	</select>
+	
+	
+	
+	
+	<!-- 문의 답변 등록 -->
+	<insert id="insertQnaAnswer">
+		INSERT 
+			INTO 
+				TUTEE_FAQ
+					(FAQ_ID
+					, MEMBER_ID
+					, TUTORING_TUTEE_ID
+					, FAQ_CONTENT
+					, FAQ_DATE
+					, PAR_FAQ_ID)
+			VALUES
+				(TUTEE_FAQ_SEQ.NEXTVAL
+				, #{MEMBER_ID}
+				, #{TUTORING_TUTEE_ID}
+				, #{FAQ_CONTENT}
+				, SYSDATE
+				, #{FAQ_ID})
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+</mapper>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

@@ -1,0 +1,583 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tutorpage_tutoring">
+
+	<!-- 진행중 리스트 -->
+	<select id="ingList" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT 
+		  TUTORING_TUTOR.THUMBNAIL_PATH
+    	, TUTORING_TUTOR.TITLE
+    	, TO_CHAR(TUTORING_TUTOR.START_DATE,'YYYY-MM-DD') AS START_DATE
+    	, TUTORING_TUTOR.TUTORING_TUTOR_ID
+    	, TUTORING_TUTOR.TUTOR_ID
+     	, TRUNC(ENTIRE_PERIOD/7) AS WEEK_PERIOD
+     	, TUTEE.PROF_PATH
+     	, (SELECT
+     		 	 COUNT(*)
+			FROM
+				 TUTORING_ENROLL
+			WHERE
+				 TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) 
+		- 
+     	  (SELECT
+     	  		 COUNT(*) 
+           FROM 
+           		TUTORING_DROP TD JOIN TUTORING_ENROLL TE ON TD.ENROLL_ID = TE.ENROLL_ID
+                                 JOIN TUTORING_TUTOR TT ON TT.TUTORING_TUTOR_ID = TE.TUTORING_TUTOR_ID
+           WHERE TT.TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) AS COUNT_TUTORING
+	FROM 
+		 TUTORING_TUTOR     JOIN TUTOR_INFO     ON TUTOR_INFO.TUTOR_ID = TUTORING_TUTOR.TUTOR_ID
+        	                JOIN TUTEE          ON TUTOR_INFO.MEMBER_ID = TUTEE.MEMBER_ID
+                        
+	WHERE
+		 TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND (TUTORING_TUTOR.START_DATE<SYSDATE AND TUTORING_TUTOR.START_DATE+TUTORING_TUTOR.ENTIRE_PERIOD>SYSDATE) AND PROGRESS_ID!=5
+		 ORDER BY START_DATE
+	]]>
+	</select>
+
+
+
+	<!-- 이전튜터링 리스트 -->
+	<select id="beforeList" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[	
+	SELECT
+		  TUTORING_TUTOR.THUMBNAIL_PATH
+    	, TUTORING_TUTOR.TITLE
+    	, TO_CHAR(TUTORING_TUTOR.START_DATE,'YYYY-MM-DD') AS START_DATE
+    	, TUTORING_TUTOR.TUTORING_TUTOR_ID
+    	, TUTORING_TUTOR.TUTOR_ID
+    	, (SELECT
+     		 	 COUNT(*)
+			FROM
+				 TUTORING_ENROLL
+			WHERE
+				 TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) - 
+     	  (SELECT
+     	  		 COUNT(*) 
+           FROM 
+           		TUTORING_DROP TD JOIN TUTORING_ENROLL TE ON TD.ENROLL_ID = TE.ENROLL_ID
+                                 JOIN TUTORING_TUTOR TT ON TT.TUTORING_TUTOR_ID = TE.TUTORING_TUTOR_ID
+           WHERE TT.TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) AS COUNT_TUTORING
+     	, TRUNC(ENTIRE_PERIOD/7) AS WEEK_PERIOD
+     	, TUTEE.PROF_PATH
+     	, (SELECT
+            	COUNT(*)
+		FROM
+				TUTORING_TUTOR TT JOIN TUTORING_ENROLL TE  ON TT.TUTORING_TUTOR_ID=TE.TUTORING_TUTOR_ID
+                	              JOIN TUTEE_REVIEW TR  	ON TE.ENROLL_ID = TR.ENROLL_ID
+        WHERE
+				TE.TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) AS COUNT_REVIEW
+	FROM TUTORING_TUTOR     JOIN TUTOR_INFO     ON TUTOR_INFO.TUTOR_ID = TUTORING_TUTOR.TUTOR_ID
+                     	    JOIN TUTEE          ON TUTOR_INFO.MEMBER_ID = TUTEE.MEMBER_ID
+	WHERE (TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND TUTORING_TUTOR.START_DATE+TUTORING_TUTOR.ENTIRE_PERIOD<SYSDATE) OR (TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND PROGRESS_ID=5)
+	ORDER BY START_DATE
+	]]>
+	</select>
+
+	<!-- 모집 중 튜터링 리스트 -->
+	<select id="recruitingList" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[	
+	SELECT
+		  TUTORING_TUTOR.THUMBNAIL_PATH
+    	, TUTORING_TUTOR.TITLE
+    	, TO_CHAR(TUTORING_TUTOR.START_DATE,'YYYY-MM-DD') AS START_DATE
+    	, TUTORING_TUTOR.TUTORING_TUTOR_ID
+    	, TUTORING_TUTOR.TUTOR_ID
+     	, TRUNC(ENTIRE_PERIOD/7) AS WEEK_PERIOD
+     	, TUTEE.PROF_PATH
+     	, (SELECT
+     		 	 COUNT(*)
+			FROM
+				 TUTORING_ENROLL
+			WHERE
+				 TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) - 
+     	  (SELECT
+     	  		 COUNT(*) 
+           FROM 
+           		TUTORING_DROP TD JOIN TUTORING_ENROLL TE ON TD.ENROLL_ID = TE.ENROLL_ID
+                                 JOIN TUTORING_TUTOR TT ON TT.TUTORING_TUTOR_ID = TE.TUTORING_TUTOR_ID
+           WHERE TT.TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) AS COUNT_TUTORING
+	FROM
+		  TUTORING_TUTOR     JOIN TUTOR_INFO     ON TUTOR_INFO.TUTOR_ID = TUTORING_TUTOR.TUTOR_ID
+         	                 JOIN TUTEE          ON TUTOR_INFO.MEMBER_ID = TUTEE.MEMBER_ID
+	WHERE
+	  TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND TUTORING_TUTOR.START_DATE>SYSDATE AND PROGRESS_ID!=5
+	ORDER BY START_DATE
+	
+	
+	]]>
+	</select>
+
+
+	<!-- 튜터링 상세페이지 -->
+	<!-- 튜터링 사진/ 튜터링 이름/ 시작날 / 참여인원 / 몇주과정 / 튜터링 소개 / 최소인원 / 최대인원 / 참가비 / 시작시간 
+		/ 끝시간/ 요일 / 위치 / 위도 / 경도 -->
+	<select id="tutoringDetail1" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT TUTORING_TUTOR.TUTOR_ID
+     	 , TUTORING_TUTOR.TUTORING_TUTOR_ID
+     	 , TUTORING_TUTOR.THUMBNAIL_PATH
+     	 , TUTORING_TUTOR.TITLE
+     	 , TO_CHAR(TUTORING_TUTOR.START_DATE,'YYYY-MM-DD') AS START_DATE
+     	 , (SELECT
+     		 	 COUNT(*)
+			FROM
+				 TUTORING_ENROLL
+			WHERE
+				 TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) - 
+     	  (SELECT
+     	  		 COUNT(*) 
+           FROM 
+           		TUTORING_DROP TD JOIN TUTORING_ENROLL TE ON TD.ENROLL_ID = TE.ENROLL_ID
+                                 JOIN TUTORING_TUTOR TT ON TT.TUTORING_TUTOR_ID = TE.TUTORING_TUTOR_ID
+           WHERE TT.TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) AS COUNT_TUTORING
+     	 , TRUNC(TUTORING_TUTOR.ENTIRE_PERIOD/7) AS WEEK_PERIOD
+     	 , TUTORING_TUTOR.INTRO
+     	 , TUTORING_TUTOR.MIN_NUM
+     	 , TUTORING_TUTOR.MAX_NUM
+     	 , TUTORING_TUTOR.ENTRY_COST
+     	 , TUTORING_TUTOR.START_TIME
+     	 , TUTORING_TUTOR.END_TIME
+     	 , WEEK.WEEK_NAME
+     	 , REGION.REG_NAME
+     	 , REGION.REG_LAT
+     	 , REGION.REG_LONG
+	FROM
+		 TUTORING_TUTOR JOIN TUTORING_WEEK      ON TUTORING_TUTOR.TUTORING_TUTOR_ID=TUTORING_WEEK.TUTORING_TUTOR_ID
+        	            LEFT JOIN WEEK               ON TUTORING_WEEK.WEEK_NAME_ID=WEEK.WEEK_NAME_ID
+          	            JOIN REGION             ON TUTORING_TUTOR.REG_ID=REGION.REG_ID
+	WHERE
+		 TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND TUTORING_TUTOR.TUTORING_TUTOR_ID=#{TUTORING_TUTOR_ID}
+	]]>
+	</select>
+
+	<!-- 튜터사진 / 튜터이름 / 튜터소개 / 튜터경력 -->
+	<select id="tutoringDetail2" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT
+		  TUTOR_INFO.TUTOR_NAME
+     	, TUTOR_INFO.INTRO
+     	, TUTOR_CAREER.CAREER_CONTENT
+     	, TUTEE.PROF_PATH
+	FROM
+		 TUTOR_INFO JOIN TUTOR_CAREER       ON TUTOR_CAREER.TUTOR_ID=TUTOR_INFO.TUTOR_ID
+        	        JOIN TUTEE              ON TUTOR_INFO.MEMBER_ID = TUTEE.MEMBER_ID
+	WHERE TUTOR_INFO.TUTOR_ID=#{TUTOR_ID}
+	
+	]]>
+	</select>
+
+	<!-- 문답SEQ / 문의SEQ(대답시 사용) / 문의내용 / 문답 날짜 / 닉네임 / 튜터이름 / 튜티ID -->
+	<select id="tutoringDetail3" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT
+		 TUTOR_FAQ.FAQ_ID, TUTOR_FAQ.PAR_FAQ_ID, TUTOR_FAQ.FAQ_CONTENT, TUTOR_FAQ.FAQ_DATE, TUTEE.NICKNAME, TUTOR_INFO.TUTOR_NAME, TUTOR_FAQ.MEMBER_ID
+	FROM
+		 TUTORING_TUTOR JOIN TUTOR_FAQ         		ON TUTORING_TUTOR.TUTORING_TUTOR_ID=TUTOR_FAQ.TUTORING_TUTOR_ID
+	                    LEFT JOIN TUTEE             ON TUTOR_FAQ.MEMBER_ID = TUTEE.MEMBER_ID
+    	                LEFT JOIN TUTORING_ENROLL   ON TUTORING_ENROLL.MEMBER_ID = TUTEE.MEMBER_ID
+        	            LEFT JOIN TUTOR_INFO        ON TUTORING_TUTOR.TUTOR_ID=TUTOR_INFO.TUTOR_ID
+	WHERE
+		 TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND TUTORING_TUTOR.TUTORING_TUTOR_ID=#{TUTORING_TUTOR_ID}
+	START WITH PAR_FAQ_ID IS NULL
+	CONNECT BY PRIOR TUTOR_FAQ.FAQ_ID = TUTOR_FAQ.PAR_FAQ_ID
+	ORDER SIBLINGS BY TUTOR_FAQ.FAQ_DATE
+	
+	]]>
+	</select>
+
+	<select id="tutoringDetail4" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT
+		 TUTOR_ID, PROF_PATH, NICKNAME, WRITEDATE, CONTENT, REVIEW_GRADE
+	FROM
+		 LATESTREVIEW
+	WHERE
+		 TUTOR_ID=#{TUTOR_ID} AND ROWNUM=1
+
+		]]>
+	</select>
+
+	<!-- 튜터링 폐강하기 -->
+	<update id="tutoringDrop" parameterType="hashmap">
+	<![CDATA[
+	UPDATE TUTORING_TUTOR
+	SET PROGRESS_ID=5
+	WHERE TUTORING_TUTOR_ID=#{TUTORING_TUTOR_ID}
+	]]>
+	</update>
+
+
+	<!-- 튜터링 문의하기 -->
+	<insert id="insertfaq" parameterType="hashmap">
+	<![CDATA[
+	INSERT INTO
+		 TUTOR_FAQ
+		 (
+		 	  FAQ_ID
+		 	, MEMBER_ID
+		 	, TUTORING_TUTOR_ID
+		 	, FAQ_CONTENT
+		 	, FAQ_DATE
+		 ) 
+	VALUES
+		(	
+			  TUTOR_FAQ_SEQ.NEXTVAL
+			, #{MEMBER_ID}
+			, #{TUTORING_TUTOR_ID}
+			, #{FAQ_CONTENT}
+			, SYSDATE
+		)
+	]]>
+	</insert>
+
+	<!-- 튜터링 문의삭제 -->
+	<delete id="deletefaq" parameterType="hashmap">
+	<![CDATA[
+		DELETE
+		FROM
+			 TUTOR_FAQ
+		WHERE
+			 FAQ_ID=#{FAQ_ID} OR PAR_FAQ_ID=#{FAQ_ID}
+	]]>
+	</delete>
+
+	<!-- 튜터링 튜티관리 -->
+	<!-- 튜터링 사진/ 튜터링 이름/ 시작날 / 참여인원 / 몇주과정 / 튜티닉네임 / 튜티프사 / 튜티별점 / 튜티평가ID(튜티평가버튼) 
+		/ 탈퇴신청자ID / 탈퇴대상자ID / 튜터링신청ID -->
+	<select id="manageTutee" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT TUTORING_TUTOR.TUTOR_ID
+ 	    , TUTORING_TUTOR.TUTORING_TUTOR_ID
+ 	    , TUTORING_TUTOR.THUMBNAIL_PATH
+ 	    , TUTORING_TUTOR.TITLE
+ 	    , TO_CHAR(TUTORING_TUTOR.START_DATE,'YYYY-MM-DD') AS START_DATE
+ 	    , (SELECT
+     		 	 COUNT(*)
+			FROM
+				 TUTORING_ENROLL
+			WHERE
+				 TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) - 
+     	  (SELECT
+     	  		 COUNT(*) 
+           FROM 
+           		TUTORING_DROP TD JOIN TUTORING_ENROLL TE ON TD.ENROLL_ID = TE.ENROLL_ID
+                                 JOIN TUTORING_TUTOR TT ON TT.TUTORING_TUTOR_ID = TE.TUTORING_TUTOR_ID
+           WHERE TT.TUTORING_TUTOR_ID = TUTORING_TUTOR.TUTORING_TUTOR_ID) AS COUNT_TUTORING
+ 	    , TRUNC(TUTORING_TUTOR.ENTIRE_PERIOD/7) AS WEEK_PERIOD
+ 	    , TUTEE.NICKNAME
+ 	    , TUTEE.PROF_PATH
+  	    , TUTEE_REVIEW.GRADE       
+  	    , TUTEE_REVIEW.REVIEW_ID
+  	    , TUTORING_DROP.REQUEST_ID
+  	    , TUTORING_DROP.TARGET_ID
+  	    , TUTORING_ENROLL.ENROLL_ID
+  		, (SELECT
+  				 AVG(TR.GRADE)
+        	FROM
+        		 TUTEE_REVIEW TR, TUTORING_ENROLL TE, TUTEE TEE, TUTORING_TUTOR TT
+        	WHERE TR.ENROLL_ID = TE.ENROLL_ID
+        	AND TE.MEMBER_ID = TEE.MEMBER_ID
+        	AND TE.TUTORING_TUTOR_ID = TT.TUTORING_TUTOR_ID
+        	AND TEE.MEMBER_ID = TUTEE.MEMBER_ID
+        	GROUP BY TEE.NICKNAME) AS AVG_GRADE
+	FROM TUTORING_ENROLL LEFT JOIN TUTORING_DROP    ON TUTORING_ENROLL.ENROLL_ID = TUTORING_DROP.ENROLL_ID
+     	                 LEFT JOIN TUTEE_REVIEW     ON TUTORING_ENROLL.ENROLL_ID = TUTEE_REVIEW.ENROLL_ID
+        	             LEFT JOIN TUTORING_TUTOR   ON TUTORING_TUTOR.TUTORING_TUTOR_ID=TUTORING_ENROLL.TUTORING_TUTOR_ID
+            	         LEFT JOIN TUTEE            ON TUTORING_ENROLL.MEMBER_ID=TUTEE.MEMBER_ID
+	WHERE TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND TUTORING_TUTOR.TUTORING_TUTOR_ID=#{TUTORING_TUTOR_ID}
+	]]>
+	</select>
+
+	<!-- 튜터 프로필 사진 -->
+	<select id="tutorProf" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT
+		  TUTEE.PROF_PATH
+		, TUTEE.MEMBER_ID
+	FROM
+		 TUTOR_INFO LEFT JOIN TUTOR_CAREER  ON TUTOR_CAREER.TUTOR_ID=TUTOR_INFO.TUTOR_ID
+           			     JOIN TUTEE              ON TUTOR_INFO.MEMBER_ID = TUTEE.MEMBER_ID
+	WHERE
+		 TUTOR_INFO.TUTOR_ID=#{TUTOR_ID} AND ROWNUM=1
+	]]>
+	</select>
+
+	<!-- 튜티평가버튼 -->
+	<insert id="addTuteeReview" parameterType="hashmap">
+		INSERT INTO
+		TUTEE_REVIEW
+		(
+		REVIEW_ID
+		, ENROLL_ID
+		, GRADE
+		, WRITEDATE
+		)
+		VALUES
+		(
+		TUTEE_REVIEW_SEQ.NEXTVAL
+		, #{ENROLL_ID}
+		, #{GRADE}
+		, SYSDATE
+		)
+	</insert>
+
+	<!-- 강퇴버튼 -->
+	<insert id="tutorDrop">
+		INSERT INTO
+		TUTORING_DROP
+		(
+		DROP_ID
+		, ENROLL_ID
+		,
+		REQUEST_ID
+		, TARGET_ID
+		, APPROVAL_DATE
+		)
+		VALUES
+		(
+		TUTORING_DROP_SEQ.nextval
+		, #{ENROLL_ID}
+		, 0
+		, 1
+		, SYSDATE)
+	</insert>
+
+	<!-- 포기승인버튼 -->
+	<update id="tuteeDrop">
+		UPDATE
+		TUTORING_DROP
+		SET
+		TARGET_ID = 1
+		,
+		APPROVAL_DATE=SYSDATE
+		WHERE
+		ENROLL_ID=#{ENROLL_ID}
+	</update>
+
+
+	<!-- 일정정보 -->
+	<!-- 튜터링 사진/ 튜터링 이름/ 시작날 / 참여인원 / 몇주과정 → tutoringDetail1 -->
+
+	<!-- 회차 / 일정정보ID(SEQ) / 올린날짜 / 위치명 / 위도 / 경도 / 일정날짜 -->
+	<select id="scheduleList" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT TUTORING_SCHEDULE.SCH_TAKE
+     	 , TUTORING_SCHEDULE.SCH_ID
+     	 , TUTORING_SCHEDULE.WRITEDATE
+     	 , TUTORING_SCHEDULE.SCH_LOCATION
+     	 , TUTORING_SCHEDULE.SCH_LAT
+     	 , TUTORING_SCHEDULE.SCH_LONG
+     	 , TO_CHAR(TUTORING_SCHEDULE.SCH_DATE,'YYYY-MM-DD HH24:MI') AS SCH_DATE
+	FROM TUTORING_SCHEDULE LEFT JOIN TUTORING_TUTOR     ON TUTORING_TUTOR.TUTORING_TUTOR_ID=TUTORING_SCHEDULE.TUTORING_TUTOR_ID
+	WHERE TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND TUTORING_TUTOR.TUTORING_TUTOR_ID=#{TUTORING_TUTOR_ID}
+	ORDER BY SCH_TAKE DESC
+	]]>
+	</select>
+
+	<!-- 일정정보 입력 -->
+	<insert id="insertSchedule" parameterType="hashmap">
+		INSERT INTO
+		TUTORING_SCHEDULE
+		(
+		SCH_ID
+		, TUTORING_TUTOR_ID
+		, SCH_TAKE
+		, WRITEDATE
+		,
+		SCH_DATE
+		)
+		VALUES
+		(
+		TUTORING_SCHEDULE_SEQ.nextval
+		, #{TUTORING_TUTOR_ID}
+		,
+		#{SCH_TAKE}
+		, SYSDATE
+		, TO_DATE(#{SCH_DATE}, 'YYYY-MM-DD HH24:MI')
+		)
+	</insert>
+
+	<!-- 일정정보 수정 -->
+	<update id="updateSchedule" parameterType="hashmap">
+		UPDATE
+		TUTORING_SCHEDULE
+		SET
+		SCH_DATE=TO_DATE(#{SCH_DATE}, 'YYYY-MM-DD
+		HH24:MI')
+		WHERE
+		SCH_ID=#{SCH_ID}
+
+	</update>
+
+	<!-- 일정정보 삭제 -->
+	<delete id="deleteSchedule" parameterType="hashmap">
+		DELETE
+		FROM
+		TUTORING_SCHEDULE
+		WHERE
+		SCH_ID=#{SCH_ID};
+	</delete>
+
+
+	<!-- 튜티 후기 리스트 -->
+	<select id="reviewList" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT
+		    TUTEE.PROF_PATH
+		  , TUTEE.NICKNAME
+		  , TUTOR_REVIEW.WRITEDATE
+		  , TUTOR_REVIEW.REVIEW_GRADE
+		  , TUTOR_REVIEW.CONTENT
+	FROM
+		 TUTORING_TUTOR LEFT JOIN TUTORING_ENROLL ON TUTORING_TUTOR.TUTORING_TUTOR_ID=TUTORING_ENROLL.TUTORING_TUTOR_ID
+                 		     JOIN TUTOR_REVIEW    ON TUTORING_ENROLL.ENROLL_ID = TUTOR_REVIEW.ENROLL_ID
+                  	    LEFT JOIN TUTEE              ON TUTEE.MEMBER_ID=TUTORING_ENROLL.MEMBER_ID
+	WHERE
+		 TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND TUTORING_TUTOR.TUTORING_TUTOR_ID=#{TUTORING_TUTOR_ID}
+	
+	]]>
+	</select>
+
+
+	<!-- 문의 관리 리스트 -->
+	<select id="qnaList" parameterType="hashmap"
+		resultType="hashmap">
+	<![CDATA[
+	SELECT
+		   TUTOR_FAQ.FAQ_ID
+		 , TUTOR_FAQ.PAR_FAQ_ID
+		 , TUTOR_FAQ.FAQ_CONTENT
+		 , TO_CHAR(TUTOR_FAQ.FAQ_DATE,'YYYY-MM-DD') AS FAQ_DATE
+		 , TUTEE.NICKNAME
+		 , TUTOR_INFO.TUTOR_NAME
+		 , TUTOR_FAQ.MEMBER_ID
+		 , (SELECT COUNT(PAR_FAQ_ID) FROM TUTOR_FAQ TF WHERE TUTOR_FAQ.FAQ_ID=TF.PAR_FAQ_ID) AS COUNT_REPLY
+		 , TUTORING_TUTOR.TITLE
+	FROM
+		 TUTORING_TUTOR JOIN TUTOR_FAQ         ON TUTORING_TUTOR.TUTORING_TUTOR_ID=TUTOR_FAQ.TUTORING_TUTOR_ID
+        	            LEFT JOIN TUTEE             ON TUTOR_FAQ.MEMBER_ID = TUTEE.MEMBER_ID
+            	        LEFT JOIN TUTORING_ENROLL   ON TUTORING_ENROLL.MEMBER_ID = TUTEE.MEMBER_ID
+                	    LEFT JOIN TUTOR_INFO        ON TUTORING_TUTOR.TUTOR_ID=TUTOR_INFO.TUTOR_ID
+	WHERE
+		 TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID} AND PAR_FAQ_ID IS NULL
+	ORDER BY COUNT_REPLY, FAQ_DATE DESC
+	]]>
+	</select>
+
+	<!-- 문의관리 상세페이지 -->
+	<!-- 문의출력 -->
+	<select id="qnaQ" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+	SELECT
+		   TUTOR_FAQ.MEMBER_ID
+		 , TUTOR_FAQ.FAQ_CONTENT 
+		 , TO_CHAR(TUTOR_FAQ.FAQ_DATE,'YYYY-MM-DD HH24:MI') AS FAQ_DATE
+		 , TUTEE.NICKNAME 
+		 , TUTEE.PROF_PATH
+		 , TUTOR_FAQ.PAR_FAQ_ID
+		 , TUTOR_FAQ.FAQ_ID
+		 , TUTOR_FAQ.TUTORING_TUTOR_ID
+	FROM
+		 TUTOR_FAQ JOIN TUTEE   ON TUTOR_FAQ.MEMBER_ID=TUTEE.MEMBER_ID
+	WHERE
+		 TUTOR_FAQ.FAQ_ID=#{FAQ_ID}
+	]]>
+	</select>
+
+	<!-- 답변출력 -->
+	<select id="qnaA" parameterType="hashmap" resultType="hashmap">	
+	<![CDATA[
+	SELECT
+		   TO_CHAR(TUTOR_FAQ.FAQ_DATE,'YYYY-MM-DD HH24:MI') AS FAQ_DATE
+		 , TUTOR_FAQ.FAQ_CONTENT
+		 , TUTOR_FAQ.TUTORING_TUTOR_ID
+		 , TUTOR_FAQ.PAR_FAQ_ID
+	FROM
+		  TUTOR_FAQ
+	WHERE PAR_FAQ_ID=#{FAQ_ID}
+	]]>
+	</select>
+
+	<!-- 답변입력 -->
+	<insert id="insertQnaA" parameterType="hashmap">
+	<![CDATA[
+	INSERT INTO
+		 TUTOR_FAQ
+		 (
+		 	FAQ_ID
+		 	, MEMBER_ID
+		 	, TUTORING_TUTOR_ID
+		 	, FAQ_CONTENT
+		 	, FAQ_DATE
+		 	, PAR_FAQ_ID
+		 )
+	 VALUES
+	 (
+	 	TUTOR_FAQ_SEQ.NEXTVAL
+	 	, #{MEMBER_ID}
+	 	, #{TUTORING_TUTOR_ID}
+	 	, #{FAQ_CONTENT}
+	 	, SYSDATE
+	 	, #{FAQ_ID}
+	 )
+	]]>
+	</insert>
+	
+	<!-- 답변수정 -->
+	<update id="updateQnaA" parameterType="hashmap">
+	<![CDATA[
+	UPDATE
+		 TUTOR_FAQ
+	SET
+		 FAQ_CONTENT=#{FAQ_CONTENT}, FAQ_DATE=SYSDATE
+	WHERE
+		 PAR_FAQ_ID=#{FAQ_ID}
+	]]>
+	</update>
+	
+	<!-- 답변삭제 -->
+	<delete id="deleteQna" parameterType="hashmap"> 
+	<![CDATA[
+	DELETE
+	FROM
+		 TUTOR_FAQ
+	WHERE
+		 PAR_FAQ_ID=#{FAQ_ID}
+	]]>
+	</delete>
+	
+	<!-- 튜터 프로필 후기 -->
+	<select id="tutorprofilereview" parameterType="hashmap" resultType="hashmap">	
+	<![CDATA[
+	SELECT
+		    TUTEE.PROF_PATH
+		  , TUTEE.NICKNAME
+		  , TO_CHAR(TUTOR_REVIEW.WRITEDATE,'YYYY-MM-DD HH24:MI') AS WRITEDATE
+		  , TUTOR_REVIEW.REVIEW_GRADE
+		  , TUTOR_REVIEW.CONTENT
+          , TUTORING_TUTOR.TUTOR_ID
+          , TUTORING_TUTOR.TITLE
+	FROM
+		 TUTORING_TUTOR LEFT JOIN TUTORING_ENROLL ON TUTORING_TUTOR.TUTORING_TUTOR_ID=TUTORING_ENROLL.TUTORING_TUTOR_ID
+                 		     JOIN TUTOR_REVIEW    ON TUTORING_ENROLL.ENROLL_ID = TUTOR_REVIEW.ENROLL_ID
+                  	    LEFT JOIN TUTEE              ON TUTEE.MEMBER_ID=TUTORING_ENROLL.MEMBER_ID
+	WHERE
+		 TUTORING_TUTOR.TUTOR_ID=#{TUTOR_ID}
+	]]>
+	</select>
+
+</mapper>

@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+
+<mapper namespace="qtboard"> 
+
+	<!-- 인덱스 반환 instr(문자열,찾을문자열,시작위치,몇번째) -->
+	<!-- 인덱스 반환 instr(문자열,찾을문자열) -->
+	
+	<!-- &gt; → > -->
+	<!-- &lt; → < -->
+
+	<sql id="where-list">
+		<if test="searchKey=='NICKNAME' ">
+			NICKNAME LIKE '%'||#{searchValue}||'%'
+		</if>
+		<if test="searchKey=='TITLE' ">
+			TITLE LIKE '%'||#{searchValue}||'%'
+		</if>
+		<if test="searchKey=='CONTENT' ">
+			CONTENT LIKE '%'||#{searchValue}||'%'
+		</if>
+	</sql>
+	
+	
+	<insert id="insertBoard" parameterType="hashmap">/* qtboard.insertBoard */
+		<selectKey keyProperty="QT_ID" resultType="String" order="BEFORE">
+			SELECT QTBOARD_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		
+		INSERT INTO
+			QTBOARD
+			(
+				QT_ID
+				,HEAD_ID
+				,MEMBER_ID
+				,TITLE
+				,CONTENT
+				,HITCOUNT
+			)
+		VALUES
+			(
+				#{QT_ID}
+				,#{HEAD_ID}
+				,#{MEMBER_ID}
+				,#{TITLE}
+				,#{CONTENT}
+				,'0'
+			)
+	</insert>
+	
+	<insert id="insertFile" parameterType="hashmap">/* qtboard.insertFile */
+	
+		INSERT INTO
+			QTBOARD_FILE
+			(
+				QT_FILE_ID
+				,QT_ID
+				,PATH_ORIGN
+				,PATH_UPDATE
+				,FILE_SIZE
+				,STATUS
+			)
+		VALUES
+			(
+				QTBOARD_FILE_SEQ.NEXTVAL
+				,#{QT_ID}
+				,#{PATH_ORIGN}
+				,#{PATH_UPDATE}
+				,#{FILE_SIZE}
+				,'Y'
+			)	
+	</insert>
+	
+	
+	<select id="boardList" parameterType="hashmap" resultType="hashmap">/* qtboard.boardList */
+		/* qtboard.boardList */
+		SELECT * FROM
+		(
+			SELECT ROWNUM AS RNUM, TB.*
+			FROM
+			(
+				SELECT QT_ID, HEAD_NAME, TITLE, NICKNAME, RECOMM, HITCOUNT, WRITEDATE, NEW, COMM
+				FROM QTBOARD_VIEW
+				<where>
+					 <if test="searchValue!=null and searchValue !='' ">
+	    	    	 	<include refid="where-list"/>
+	    	    	 </if>
+				</where>
+				
+				ORDER BY QT_ID DESC
+		
+		<![CDATA[
+				 )TB WHERE ROWNUM <= #{END}
+	        ) 
+		WHERE RNUM >= #{START}
+		]]>
+	</select>
+	
+	<select id="commBoardList" parameterType="hashmap" resultType="hashmap">/* qtboard.commBoardList */
+		SELECT 
+			ROWNUM AS RNUM, QBV.*
+		FROM
+			(
+				SELECT QT_ID
+				, HEAD_NAME
+				, TITLE
+				, NICKNAME
+				, RECOMM				
+				, HITCOUNT
+				, WRITEDATE
+				, REP
+				FROM 
+					QTBOARD_BEST_VIEW
+		<![CDATA[
+			)
+				QBV WHERE ROWNUM <= 5
+		]]>
+	</select>
+	
+	
+	<select id="hitBoardList" parameterType="hashmap" resultType="hashmap">/* qtboard.hitBoardList */
+		SELECT 
+			ROWNUM AS RNUM, QBV.*
+		FROM
+			(
+				SELECT QT_ID
+				, HEAD_NAME
+				, TITLE
+				, NICKNAME
+				, RECOMM				
+				, HITCOUNT
+				, WRITEDATE
+				, REP
+				FROM 
+					QTBOARD_HIT_VIEW
+		<![CDATA[
+			)
+				QBV WHERE ROWNUM <= 5
+		]]>
+	</select>
+	
+	<select id="dataCount" resultType="Integer" parameterType="hashmap">/* qtboard.dataCount */
+	    SELECT NVL(COUNT(*), 0) FROM QTBOARD_VIEW	
+	    <where>
+			<if test="searchValue!=null and searchValue !='' ">
+   	    		<include refid="where-list"/>
+   	    	</if>
+		</where> 
+    </select>
+    
+    
+    <update id="updateHitCount" parameterType="hashmap">
+		UPDATE QTBOARD SET HITCOUNT=HITCOUNT+1 WHERE QT_ID = #{QT_ID}
+	</update>
+	
+	<select id="readBoard" parameterType="hashmap" resultType="hashmap">/* qtboard.readBoard */
+		SELECT 
+			QT_ID
+			,HEAD_NAME
+			,TITLE
+			,NICKNAME
+			,WRITEDATE
+			,CONTENT
+			,HITCOUNT
+			,RECOMM
+			,REP
+			,PROF_PATH
+		FROM 
+			QTBOARD_VIEW 
+		WHERE 
+			QT_ID = #{QT_ID}
+	</select>
+	
+	<select id="selectFileList" parameterType="hashmap" resultType="hashmap">/* qtboard.selectFileList */
+		SELECT
+			QT_FILE_ID
+			,PATH_ORIGN
+			,ROUND(FILE_SIZE/1024,1) AS FILE_SIZE
+		FROM
+			QTBOARD_FILE
+		WHERE
+			QT_ID = #{QT_ID}
+		AND
+			STATUS = 'Y'
+	</select>
+	
+	
+	<update id="updateBoard" parameterType="hashmap">/* qtboard.updateBoard */
+		UPDATE QTBOARD
+		SET 
+			WRITEDATE = SYSDATE
+			, HEAD_ID = #{HEAD_ID} 
+			, TITLE = #{TITLE}
+			, CONTENT = #{CONTENT}
+		WHERE 
+			QT_ID = #{QT_ID}	
+	</update>	
+	
+	<delete id="deleteBoard" parameterType="hashmap">/* qtboard.deleteBoard */
+		DELETE
+		FROM QTBOARD
+		WHERE QT_ID = #{QT_ID}	
+	</delete>
+	
+	<select id="commList" parameterType="hashmap" resultType="hashmap">/* qtboard.commList */
+		SELECT 
+			ROWNUM
+			,COMM_ID
+			,NICKNAME
+			,PAR_COMM_ID
+			,PAR_NICKNAME
+			,COMM_DEPT
+			,CONTENT
+			,WRITEDATE 
+			,RECOMM
+			,REP
+			,PARCHECK
+			,DELCHECK
+		FROM 
+			QTBOARD_COMM_VIEW
+		WHERE 
+			QT_ID = #{QT_ID}
+	</select>	
+	
+	<insert id="addComment" parameterType="hashmap">/* qtboard.addComment */
+		<selectKey keyProperty="COMM_ID" order="BEFORE" resultType="Integer">
+			SELECT QTBOARD_COMM_SEQ.NEXTVAL FROM DUAL
+		</selectKey>
+		INSERT INTO 
+			QTBOARD_COMM 
+				(
+					COMM_ID
+					, MEMBER_ID
+					, QT_ID
+					, COMM_DEPT
+					, PAR_COMM_ID
+					, CONTENT
+				)
+		VALUES 
+				(
+					#{COMM_ID}
+					, #{MEMBER_ID}
+					, #{QT_ID}
+					, #{COMM_DEPT}
+					, #{PAR_COMM_ID}
+					, #{CONTENT}
+				)
+	</insert>
+	
+
+	
+	<select id="selectComment" parameterType="hashmap" resultType="hashmap">/* qtboard.selectComment */
+		SELECT COMM_ID, NICKNAME, CONTENT
+		FROM QTBOARD_COMM_VIEW
+		WHERE COMM_ID = #{COMM_ID}
+	</select>
+	
+	
+	<update id="updateComment" parameterType="hashmap">/* qtboard.updateComment */
+		UPDATE 
+			QTBOARD_COMM
+		SET 
+			CONTENT = #{CONTENT}
+			, WRITEDATE = SYSDATE
+		WHERE 
+			COMM_ID = #{COMM_ID}
+	</update>
+	
+	<delete id="deleteComment" parameterType="hashmap">/* qtboard.deleteComment */
+		DELETE
+		FROM QTBOARD_COMM
+		WHERE COMM_ID = #{COMM_ID}
+	</delete>
+	
+	<update id="updateDeleteComment" parameterType="hashmap">
+		UPDATE
+			QTBOARD_COMM
+		SET 
+			DELCHECK = 'Y'
+		WHERE 
+			COMM_ID = #{COMM_ID}
+	</update>
+	
+	<select id="parCommentCheck" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			QTBOARD_COMM
+		WHERE
+			PAR_COMM_ID = #{PAR_COMM_ID}
+	</select>
+	
+	
+</mapper>
+
+
+
+
+
+
+
+
+
+
+
+

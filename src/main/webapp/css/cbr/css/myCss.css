@@ -1,0 +1,190 @@
+@charset "UTF-8";
+
+/*
+
+- TutorPage_done
+- TuteePage_done
+
+
+*/
+
+
+/* @font-face 
+{ 
+	font-family: 'S-CoreDream-4Regular'; 
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-4Regular.woff') format('woff'); 
+	font-weight: normal; 
+	font-style: normal; 
+}
+
+
+@font-face 
+{ 
+	font-family: 'S-CoreDream-2ExtraLight'; 
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_six@1.2/S-CoreDream-2ExtraLight.woff') format('woff'); 
+	font-weight: normal; 
+	font-style: normal; 
+}
+
+
+@font-face 
+{ 
+	font-family: 'BBTreeGL'; 
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_nine_@1.1/BBTreeGL.woff') format('woff'); 
+	font-weight: normal; 
+	font-style: normal;
+}
+*/
+
+/*
+ @font-face 
+{ 
+	font-family: 'Eoe_Zno_L'; 
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/Eoe_Zno_L.woff') format('woff'); 
+	font-weight: normal; 
+	font-style: normal; 
+}
+
+@font-face 
+{ 
+	font-family: 'Eoe_Zno_B'; 
+	src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_eight@1.0/Eoe_Zno_B.woff') format('woff'); 
+	font-weight: normal; 
+	font-style: normal; 
+}
+ */
+
+
+/* body, table, div, p {font-family:'S-CoreDream-4Regular';}*/ /* 에스코어드림Reg */
+/*.subcontent {font-family:'S-CoreDream-2ExtraLight';}*/ /* 에스코어드림EL */
+/*body, table, div, p {font-family:'BBTreeGL';}*/ /* 유토이미지고딕L */
+/* body, table, div, p {font-family:'Eoe_Zno_B';} 남양주고딕B
+.subcontent {font-family:'Eoe_ZnEoe_Zno_Bo_L';} 남양주고딕L
+div.subcontent {font-family:'Eoe_ZnEoe_Zno_Bo_L';} 남양주고딕L
+div.header-style {font-family:'Eoe_Zno_L';} 남양주고딕L */
+/* body, table, div, p {font-weight: bold;} */
+/* .subcontent {font-weight: 200;} 남양주고딕L
+div.subcontent {font-weight: 200;} 남양주고딕L
+div.header-style {font-weight: 200;} */
+.nick {font-weight: bold;}
+
+body
+{
+	padding-top: 0px;
+}
+
+
+img 
+{ 
+	width: 900; 
+	height: 300;
+	vertical-align: middle
+}
+
+img#mapImg
+{
+	max-width: 100%;
+}
+
+img#profilePic01
+{
+    width: 50px; height: 50px;
+}
+
+img#profilePic02
+{
+    width: 50px; height: 50px;
+}
+
+
+.row
+{
+	padding-top: 40px;
+	padding-bottom: 40px;
+}
+
+
+
+#table { display: table; width: 100%; }
+.row-div { display: table-row; }
+.cell 
+{ 
+	display: table-cell; 
+	padding: 16px; 
+	border-bottom: 1px solid #DDD; 
+	vertical-align: middle; 
+}
+
+.col1 
+{ 
+	width: 40%; 
+	text-align: left;	
+}
+.col2 
+{	
+	width: 60%; 
+	text-align: right;
+}
+
+ul li
+{
+	list-style: none;
+	margin:0px; padding:0px;
+}
+
+.media
+{
+	padding: 30px;
+}
+
+
+.tutor-reply
+{
+	background-color: #f0f6ff;
+}
+
+.card-header 
+{
+  background-color: #f0f6ff;
+}
+
+#fixed
+{
+	position: fixed;
+}
+
+
+/* @media (max-width: 1000px) {
+  .card-btm {
+    min-width: 1000px;
+    display: display;
+  }
+} */
+
+.img-fluid {
+  width: 900px;
+  height: 400px;
+}
+
+
+img#faq01
+{
+	width: 22px; height: 22px;
+}
+img#faq02
+{
+	width: 20px; height: 20px;
+}
+
+
+.media-review
+{
+	display: flex;
+    align-items: flex-start;
+}
+
+body
+{
+	padding-top: 0px;
+}
+

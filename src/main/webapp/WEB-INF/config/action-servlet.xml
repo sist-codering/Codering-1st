@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns="http://www.springframework.org/schema/beans"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+       http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+       http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd">
+
+	<!-- codering 패키지 안에있는 모든 어노테이션 읽어와서 만들어줌 -->
+	<context:component-scan base-package="com.codering"/>
+	
+	<!-- ○ Annotation 활성화 -->
+
+
+	<!-- ○ 『/』 매핑에서 정적 리소스(html, css, js 등)를 처리할 수 있도록 설정 -->
+	<!--    → 각 WAS는 서블릿 매핑에 존재하지 않는 요청을 처리하기 위한 --> 
+	<!--       default-servlet 을 제공하고 있다. -->
+	<!--    → Controller 의 @RequestMapping 에 등록되지 않은 요청이나 -->
+	<!--       JSP 에 대한 요청을 처리하는 것이 default-servlet 이다. -->
+	<!--    → web.xml 을 설정하는 과정에서 -->
+	<!--       DispatcherServlet 의 매핑 URL 패턴을 『"/"』로 지정하면 -->
+	<!--       JSP 를 제외한 모든 요청이 DispatcherServlet 으로 가기 때문에 -->
+	<!--       WAS 가 제공하는 default-servlet 이  -->
+	<!--       『*.html』이나 『*.css』와 같은 요청을 처리할 수 없게 된다. -->
+	<!--    → default-servlet-handler 는 바로 이 default-servlet 에 -->
+	<!--       요청을 전달해주는 핸들로러서, -->
+	<!--    → 요청 URL에 매핑되는 컨트롤러가 존재하지 않을 때 --> 
+	<!--       404 응답대신, 디폴트 서블릿이 해당 요청 URL을 처리하도록 한다. --> 
+	<!--       따라서, 『*.css』와 같은 컨트롤러에 매핑되어 있지 않은 URL 요청은 --> 
+	<!--       최종적으로 디폴트 서블릿에 전달되어 처리된다. -->
+	<mvc:default-servlet-handler />
+
+	<!-- ○ Annotation 활성화 -->
+	<!--    → 위 mvc:annotation-driven 과 동일한 기능을 갖고 있지만 -->
+	<!--    → 이 방식의 장점 중 하나는 --> 
+    <!--       @Autowired와 @Qualifier Annotation을 인식할 수 있다는 것이다. -->
+   
+	<mvc:annotation-driven>
+		<mvc:argument-resolvers>
+			<bean class="codering.common.resolver.CustomMapArgumentResolver"/>		
+		</mvc:argument-resolvers>
+	</mvc:annotation-driven>
+	
+	
+	<!-- log4j 를 활용하기 위해 DispatheServlet 에 들어가는 request를 인터셉트 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<bean id="loggerInterceptor" class="codering.common.logger.LoggerInterceptor"></bean>
+		</mvc:interceptor>	
+		
+		<mvc:interceptor>
+			<mvc:mapping path="/**"/>
+			<mvc:exclude-mapping path="/user_*"/>
+			<mvc:exclude-mapping path="/Header_Sidebar_done.jsp"/>
+			<mvc:exclude-mapping path="/Header_Sidebar.jsp"/>
+			<mvc:exclude-mapping path="/css/**"/>
+			<mvc:exclude-mapping path="/font/**"/>
+			<mvc:exclude-mapping path="/headerFiles/**"/>
+			<mvc:exclude-mapping path="/images/**"/>
+			<mvc:exclude-mapping path="/js/**"/>
+			<mvc:exclude-mapping path="/resource/**"/>
+			<mvc:exclude-mapping path="/vendor/**"/>
+			<bean class="com.codering.common.LoginCheckInterceptor"/>
+		</mvc:interceptor>		
+	</mvc:interceptors>
+	
+	<!-- AOP -->
+	<aop:aspectj-autoproxy/>
+	<bean id="loggerAspect" class="codering.common.logger.LoggerAspect" />
+	
+    <bean class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping"/>
+    
+    <!-- ViewResolver -->
+    <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0" />
+    <bean id="jsonView" class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />    
+    
+    
+    <!-- View를 지정해 줄때 앞뒤로 주소와 파일형식 안붙여도 됨 -->
+    <bean
+    	class="org.springframework.web.servlet.view.UrlBasedViewResolver" p:order="1" 
+    	p:viewClass="org.springframework.web.servlet.view.JstlView" 
+    	p:prefix="/WEB-INF/views/" p:suffix=".jsp">
+   	</bean>
+   	
+   	<!-- ○ 파일 업로드 -->
+	
+	<bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+		<!-- 자바파일이 UTF-8로 저장된 경우 한글파일명이 깨지지 않게하기 위해 -->
+		<!-- 10MB (=10 x 1024 x 1024) -->
+		<property name="defaultEncoding" value="utf-8" />
+		<property name="maxUploadSize" value="10485760" />
+	</bean>   	
+</beans>
+
+

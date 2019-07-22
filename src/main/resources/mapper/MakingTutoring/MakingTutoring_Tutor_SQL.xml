@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="makingtutoring_tutor">
+
+	<insert id="insertTutoringTutor" parameterType="hashmap">
+		INSERT INTO TUTORING_TUTOR
+			(TUTORING_TUTOR_ID
+			,TUTOR_ID
+			,TITLE
+			,INTRO
+			,START_DATE
+			,ENTIRE_PERIOD
+			,MIN_NUM
+			,MAX_NUM
+			,REG_ID
+			,ENTRY_COST
+			,TUTORING_TUTEE_ID
+			,PROGRESS_ID
+			,START_TIME
+			,END_TIME
+			,THUMBNAIL_PATH)
+		VALUES
+			(TUTORING_TUTOR_SEQ.NEXTVAL
+			,#{TUTOR_ID}
+			,#{TITLE}
+			,#{INTRO}
+			,TO_DATE(#{START_DATE},'YYYY-MM-DD')
+			,#{ENTIRE_PERIOD}
+			,#{MIN_NUM}
+			,#{MAX_NUM}
+			,#{REG_ID}
+			,#{ENTRY_COST}
+			,NULL
+			,'1'
+			,#{START_TIME}
+			,#{END_TIME}
+			,#{THUMBNAIL_PATH})
+	</insert>
+	
+	
+	<select id="selectTutorQNA" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			ROWNUM,QNA_QUESTION,QNA_ANSWER
+		FROM 
+			TUTOR_QNA
+		WHERE 
+			TUTOR_ID=#{TUTOR_ID}
+	</select>
+	
+	<insert id="insertTutorFAQ" parameterType="hashmap">
+		INSERT INTO FAQ
+			(FAQ_ID
+			,TUTORING_TUTOR_ID
+			,FAQ_QUESTION
+			,FAQ_ANSWER)
+	    VALUES 
+	    	(FAQ_SEQ.NEXTVAL
+	    	,TUTORING_TUTOR_SEQ.CURRVAL
+	    	,#{FAQ_QUESTION}
+	    	,#{FAQ_ANSWER})
+	</insert>
+	
+	<insert id="insertTutoringWeek" parameterType="hashmap">
+		INSERT INTO TUTORING_WEEK
+			(WEEK_ID,TUTORING_TUTOR_ID,WEEK_NAME_ID) 
+		VALUES
+			(TUTORING_WEEK_SEQ.NEXTVAL,TUTORING_TUTOR_SEQ.CURRVAL,#{WEEK_NAME_ID})
+	</insert>
+	
+	<insert id="insertTutorNeedTech" parameterType="hashmap">
+		INSERT INTO TUTOR_NEEDTECH
+			(NEEDTECH_ID,TUTORING_TUTOR_ID,INTEREST_ID,LEVEL_ID) 
+		VALUES
+			(TUTOR_NEEDTECH_SEQ.NEXTVAL,TUTORING_TUTOR_SEQ.CURRVAL,#{INTEREST_ID},#{LEVEL_ID})
+	</insert>
+	
+	<select id="selectRegion"  resultType="hashmap">
+		SELECT
+			REG_ID,REG_NAME,REG_LAT,REG_LONG
+		FROM
+			REGION
+	</select>
+	
+	<select id="selectInterest" resultType="hashmap">
+		SELECT 
+			INTEREST_ID,INTEREST_CAT,CATEGORIE_ID
+		FROM 
+			INTEREST
+		WHERE 
+			CATEGORIE_ID=1
+	</select>
+	
+	<select id="selectLevel" resultType="hashmap">
+		SELECT
+			LEVEL_ID,LEVEL_NAME
+		FROM 
+			TECH_LEVEL
+	</select>
+	
+	<!-- 지역아이디로 지역이름 검색하기 -->
+	<select id="selectRegionName" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			REG_NAME,REG_LAT,REG_LONG
+		FROM 
+			REGION
+		WHERE 
+			REG_ID = #{REG_ID}
+	</select>
+	
+	<!-- Time아이디로 Time이름 검색하기 -->
+	<select id="selectTimeName" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			WEEDAY_END,AM_PM
+		FROM 
+			TIME_DIVISION
+		WHERE 
+			TIME_CAT_ID = #{TIME_CAT_ID}
+	</select>
+	
+	<!-- 레벨아이디로 레벨이름 검색하기 -->
+	<select id="selectLevelName" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			LEVEL_NAME
+		FROM 
+			TECH_LEVEL
+		WHERE 
+			LEVEL_ID= #{LEVEL_ID}
+	</select>
+	
+	<!-- 언어아이디로 언어이름 검색하기 -->
+	<select id="selectInterestName" parameterType="hashmap" resultType="hashmap">
+	
+		SELECT 
+			INTEREST_CAT
+		FROM 
+			INTEREST
+		WHERE 
+			CATEGORIE_ID=1 
+			AND INTEREST_ID=#{INTEREST_ID}
+	</select>
+
+	<select id="selectRegCount" resultType="Integer">
+		SELECT
+			COUNT(*) AS REG_COUNT
+		FROM 
+			TUTEE
+		WHERE 
+			REG_ID = #{REG_ID}
+	</select>
+
+	<select id="selectWeekName" resultType="java.lang.String" parameterType="java.lang.String">
+		SELECT 
+			WEEK_NAME
+		FROM 
+			WEEK
+		WHERE 
+			WEEK_NAME_ID=#{WEEK_NAME_ID}
+	</select>
+	
+	<select id ="selectTutorInfo" resultType="hashmap" parameterType="hashmap">
+		SELECT 
+			TUTOR_NAME,INTRO,PROF_PATH
+		FROM 
+			TUTOR_INFO TI JOIN TUTEE T
+		ON 
+			TI.MEMBER_ID =T.MEMBER_ID AND TI.TUTOR_ID=#{TUTOR_ID}
+	</select>
+	
+	<select id="selectTutorCareer" resultType="hashmap" parameterType="hashmap">
+		SELECT 
+			TO_CHAR(CAREER_START,'YYYY-MM-DD')AS CAREER_START,TO_CHAR(CAREER_END,'YYYY-MM-DD') AS CAREER_END,CAREER_CONTENT
+		FROM 
+			TUTOR_CAREER
+		WHERE 
+			TUTOR_ID= #{TUTOR_ID}
+	</select>
+	
+	<select id="selectTutorReview" resultType="hashmap" parameterType="hashmap">
+	<![CDATA[
+		  SELECT 
+		  		REVIEW_ID,TUTORING_TUTOR_ID,REVIEW_GRADE,NICKNAME,WRITEDATE,CONTENT,PROF_PATH
+		   FROM
+				   (SELECT *
+				   FROM TUTOR_REVIEW
+				   WHERE ENROLL_ID IN (SELECT ENROLL_ID
+		                       FROM TUTORING_ENROLL                                                                                           
+		                       WHERE  TUTORING_TUTOR_ID  IN  (SELECT TUTORING_TUTOR_ID
+		                                                        FROM TUTORING_TUTOR
+		                                                        WHERE TUTOR_ID = #{TUTOR_ID}))ORDER BY REVIEW_ID DESC)A JOIN (SELECT TE.ENROLL_ID,T.MEMBER_ID,TUTORING_TUTOR_ID,NICKNAME,T.PROF_PATH
+		                                                                                        FROM TUTORING_ENROLL TE JOIN TUTEE T
+		                                                                                    ON TE.MEMBER_ID = T.MEMBER_ID) B
+		                                                                                   ON A.ENROLL_ID = B.ENROLL_ID AND ROWNUM<=3
+	]]> 
+	</select>
+	
+	<select id="selectSearchTutor" resultType="hashmap" parameterType="hashmap">
+		SELECT TUTOR_NAME
+		FROM TUTOR_INFO
+		WHERE TUTOR_ID = #{TUTOR_ID}
+	</select>
+
+</mapper>

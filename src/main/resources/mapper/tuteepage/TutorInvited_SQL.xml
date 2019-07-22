@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tutorInvited">
+
+	<!-- 튜터 초대받은튜터링 목록 조회 -->
+	<select id="selectTutorInvitedList" parameterType="hashmap" resultType="hashmap">
+		/* tutorInvited.selectTutorInvitedList */
+		SELECT 
+			A.INVITE_ID
+			, A.TUTOR_ID
+			, A.TUTORING_TUTEE_ID
+			, A.INVITE_DATE
+			, A.MACH_LV_ID
+			, B.TUTOR_NAME
+			, C.TUTORING_TITLE
+			, C.INTRO
+			, C.ENTIRE_PERIOD
+			, C.ENTIRE_PERIOD / 7 || '주' AS ENTIRE_PERIOD_WEEK
+			, D.NICKNAME
+			, E.REG_ID
+			, E.REG_NAME
+			, G.WEEDAY_END
+			, G.AM_PM
+			, I.INTEREST_CAT
+			, J.CATEGORIE_NAME
+			, K.LEVEL_NAME
+			, L.MACH_LV_NAME
+		FROM 
+			TUTOR_INVITE A
+			, TUTOR_INFO B
+			, TUTORING_TUTEE C
+			, TUTEE D
+			, REGION E
+			, TUTORING_TUTEE_TIME F
+			, TIME_DIVISION G
+			, TUTEE_NEEDTHCH H
+			, INTEREST I
+			, CATEGORIE J
+			, TECH_LEVEL K
+			, MACH_LV L
+		WHERE 
+			1=1
+			AND A.TUTOR_ID = B.TUTOR_ID
+			AND A.TUTORING_TUTEE_ID = C.TUTORING_TUTEE_ID
+			AND C.MEMBER_ID = D.MEMBER_ID
+			AND C.REG_ID = E.REG_ID
+			AND A.TUTORING_TUTEE_ID = F.TUTORING_TUTEE_ID
+			AND F.TIME_CAT_ID = G.TIME_CAT_ID
+			AND A.TUTORING_TUTEE_ID = H.TUTORING_TUTEE_ID
+			AND H.INTEREST_ID = I.INTEREST_ID
+			AND I.CATEGORIE_ID = J.CATEGORIE_ID
+			AND H.LEVEL_ID = K.LEVEL_ID
+			AND A.MACH_LV_ID = L.MACH_LV_ID
+			AND A.MACH_LV_ID != 2
+			AND A.TUTOR_ID = #{TUTOR_ID}
+		ORDER BY 1
+	</select>
+	
+	<!-- 튜터 초대받은튜터링 수락/거절 -->
+	<update id="updateTutorInvitedStatus" parameterType="hashmap">
+		/* tutorInvited.updateTutorInvitedStatus */
+		UPDATE 
+			TUTOR_INVITE
+		SET 
+			MACH_LV_ID = #{MACH_LV_ID}
+		WHERE
+			INVITE_ID = #{INVITED_ID}
+	</update> 
+	
+	<!-- 튜터의 수락 후 초대게시판에서 튜티장과 대화  -->
+	<select id="selectTutorInvitedBoard" parameterType="hashmap" resultType="hashmap">
+		/* tutorInvited.selectTutorInvitedBoard */
+		SELECT 
+			A.INVITE_ID
+			, A.WRITER
+			, A.CONTENT
+			, TO_CHAR( A.WRITEDATE, 'AM HH12:MI   MM-DD') AS WRITEDATE
+			, CASE WHEN A.READCHECK = 0 THEN '읽음' ELSE '1' END AS READCHECK
+			, CASE WHEN WRITER = #{TUTOR_NAME} THEN 'RIGHT' 
+					ELSE 'LEFT' 
+			END AS TEXT_ALIGN
+            , B.MACH_LV_ID
+		FROM 
+			INVITE_BOARD A
+            , TUTOR_INVITE B
+		WHERE 
+			1=1
+            AND A.INVITE_ID = B.INVITE_ID(+)
+			AND A.INVITE_ID = #{INVITED_ID}
+		ORDER BY 
+			A.WRITEDATE, A.INVITE_BD_ID
+	</select>
+	
+	<!-- 수락 후 대화중인 튜티장 이름 조회 -->
+	<select id="selectTuteeName" parameterType="hashmap" resultType="String">
+		/* tutorInvited.selectTuteeName */
+		SELECT 
+			A.WRITER AS TUTEE_NAME
+		FROM 
+			INVITE_BOARD A
+		WHERE 
+			1=1
+			AND INVITE_ID = #{INVITED_ID}
+			AND WRITER != #{TUTOR_NAME}
+		GROUP BY 
+			A.WRITER
+	</select>
+	
+	<!-- 수락 후 튜터와 튜티장 대화 목록 조회 -->
+	<insert id="insertTutorInvitedBoardMsg" parameterType="hashmap">
+		/* tutorInvited.insertTutorInvitedBoardMsg */
+		INSERT INTO 
+			INVITE_BOARD 
+			(INVITE_BD_ID
+			, INVITE_ID
+			, WRITER
+			, CONTENT
+			, WRITEDATE
+			, READCHECK)
+		VALUES 
+			(INVITE_BOARD_SEQ.NEXTVAL
+			, #{INVITED_ID}
+			, #{TUTOR_NAME}
+			, #{TUTOR_MSG}
+			, SYSDATE
+			, '1')
+	</insert>
+	
+	<!-- 튜티장의 메시지 읽음 처리 -->
+	<update id="updateTutorInvitedBoardRead" parameterType="hashmap">
+		/* tutorInvited.updateTutorInvitedBoardRead */
+		UPDATE INVITE_BOARD
+		SET READCHECK  = '0'
+		WHERE 1=1
+		AND WRITER != #{TUTOR_NAME}
+		AND READCHECK = '1'
+	</update>
+	
+	<!-- 튜터의 초대받은 튜터링 확정 -->
+	<update id="updateTutorInvitedBoardFix" parameterType="hashmap">
+		/* tutorInvited.updateTutorInvitedBoardFix */
+		UPDATE
+			TUTOR_INVITE 
+		SET 
+			MACH_LV_ID = #{MACH_LV_ID}
+		WHERE
+			INVITE_ID = #{INVITED_ID}
+	</update>
+	
+	<select id="selectTutorInvitedTutoringDetail" parameterType="hashmap" resultType="hashmap">
+		/* tutorInvited.selectTutorInvitedTutoringDetail */
+		SELECT  
+			B.TUTORING_TITLE
+			, B.ENTIRE_PERIOD / 7 || '주' AS ENTIRE_PERIOD_WEEK
+			, B.MIN_NUM
+			, B.MAX_NUM
+			, B.ENTRY_COST
+			, C.REG_NAME
+			, E.INTEREST_CAT
+			, F.LEVEL_NAME
+			, G.MACH_LV_ID
+			, G.MACH_LV_NAME
+			, I.WEEDAY_END
+			, I.AM_PM
+		FROM
+			TUTOR_INVITE A
+			, TUTORING_TUTEE B
+			, REGION C
+			, TUTEE_NEEDTHCH D
+			, INTEREST E
+			, TECH_LEVEL F
+			, MACH_LV G
+			, TUTORING_TUTEE_TIME H
+			, TIME_DIVISION I
+		WHERE 
+			1=1
+			AND A.TUTORING_TUTEE_ID = B.TUTORING_TUTEE_ID
+			AND B.REG_ID = C.REG_ID
+			AND A.TUTORING_TUTEE_ID = D.TUTORING_TUTEE_ID
+			AND D.INTEREST_ID = E.INTEREST_ID
+			AND D.LEVEL_ID = F.LEVEL_ID
+			AND A.MACH_LV_ID = G.MACH_LV_ID
+			AND A.TUTORING_TUTEE_ID = H.TUTORING_TUTEE_ID
+			AND H.TIME_CAT_ID = I.TIME_CAT_ID
+			AND A.MACH_LV_ID = #{MACH_LV_ID}
+			AND A.TUTOR_ID = #{INVITED_ID}
+	</select>
+</mapper>

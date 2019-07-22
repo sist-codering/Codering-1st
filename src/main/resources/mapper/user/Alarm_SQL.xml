@@ -1,0 +1,315 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+<mapper namespace="alarm"> 
+
+	<insert id="tutoringEnroll" parameterType="hashmap">
+		<selectKey keyProperty="SK_MEMBER_ID" order="BEFORE" resultType="Integer">
+			SELECT 
+				TI.MEMBER_ID
+			FROM 
+				TUTORING_ENROLL TE
+				, TUTORING_TUTOR TT
+				, TUTOR_INFO TI
+			WHERE 
+				TE.TUTORING_TUTOR_ID = TT.TUTORING_TUTOR_ID
+			AND 
+				TT.TUTOR_ID = TI.TUTOR_ID
+			AND 
+				TE.ENROLL_ID = #{ENROLL_ID}
+		</selectKey>
+		
+		INSERT INTO
+			ALARM
+			(
+				ALARM_ID
+				,MEMBER_ID
+				,ALARMTYPE_ID
+				,ALARM_CHECH
+				,ALARM_LINK
+				,ALARM_CONTENT
+			)
+		VALUES
+			(
+				ALARM_SEQ.NEXTVAL
+				,#{SK_MEMBER_ID}
+				,'1'
+				,'1'
+				,#{TUTORING_TUTOR_ID}
+				,(SELECT TITLE
+				FROM TUTORING_TUTOR
+				WHERE TUTORING_TUTOR_ID = {TUTORING_TUTOR_ID}
+				)
+			)		
+	</insert>
+	
+	
+	<insert id="tutorFAQ" parameterType="hashmap">
+		<selectKey keyProperty="SK_MEMBER_ID" order="BEFORE" resultType="Integer">
+			SELECT 
+				TI.MEMBER_ID
+			FROM 
+				TUTOR_FAQ TF
+				, TUTORING_TUTOR TT
+				, TUTOR_INFO TI
+			WHERE 
+				TF.TUTORING_TUTOR_ID = TT.TUTORING_TUTOR_ID
+			AND 
+				TT.TUTOR_ID = TI.TUTOR_ID
+			AND 
+				FAQ_ID = #{FAQ_ID}
+		</selectKey>
+		INSERT INTO
+			ALARM
+			(
+				ALARM_ID
+				,MEMBER_ID
+				,ALARMTYPE_ID
+				,ALARM_CHECH
+				,ALARM_LINK
+				,ALARM_CONTENT
+			)
+		VALUES
+			(
+				ALARM_SEQ.NEXTVAL
+				,#{SK_MEMBER_ID}
+				,'2'
+				,'1'
+				,#{TUTORING_TUTOR_ID}
+				,(SELECT TITLE
+				FROM TUTORING_TUTOR
+				WHERE TUTORING_TUTOR_ID = #{TUTORING_TUTOR_ID}
+				)
+			)	
+	</insert>
+	
+	<insert id="tuteeFAQ" parameterType="hashmap">
+		<selectKey keyProperty="SK_MEMBER_ID" order="BEFORE" resultType="Integer">
+			SELECT 
+				TT.MEMBER_ID
+			FROM 
+				TUTEE_FAQ TF
+				, TUTORING_TUTEE TT
+			WHERE 
+				TF.TUTORING_TUTEE_ID = TT.TUTORING_TUTEE_ID
+			AND 
+				FAQ_ID = #{FAQ_ID}
+		</selectKey>
+		INSERT INTO
+			ALARM
+			(
+				ALARM_ID
+				,MEMBER_ID
+				,ALARMTYPE_ID
+				,ALARM_CHECH
+				,ALARM_LINK
+				,ALARM_CONTENT
+			)
+		VALUES
+			(
+				ALARM_SEQ.NEXTVAL
+				,#{SK_MEMBER_ID}
+				,'9'
+				,'1'
+				,#{TUTORING_TUTEE_ID}
+				,(SELECT 
+					TUTORING_TITLE
+				FROM 
+					TUTORING_TUTEE
+				WHERE 
+					TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID}
+				)
+			)		
+	</insert>
+	
+	<insert id="invite" parameterType="hashmap">
+		<selectKey keyProperty="SK_MEMBER_ID" order="BEFORE" resultType="Integer">
+			SELECT 
+				TU.MEMBER_ID
+			FROM 
+				TUTOR_INVITE TI
+				,TUTOR_INFO TU
+			WHERE 
+				TI.TUTOR_ID = TU.TUTOR_ID
+			AND 
+				INVITE_ID = #{INVITE_ID}		
+		</selectKey>
+		INSERT INTO
+			ALARM
+			(
+				ALARM_ID
+				,MEMBER_ID
+				,ALARMTYPE_ID
+				,ALARM_CHECH
+				,ALARM_LINK
+				,ALARM_CONTENT
+			)
+		VALUES
+			(
+				ALARM_SEQ.NEXTVAL
+				,#{SK_MEMBER_ID}
+				,'3'
+				,'1'
+				,#{TUTORING_TUTEE_ID}
+				,(SELECT 
+					TUTORING_TITLE
+				FROM 
+					TUTORING_TUTEE
+				WHERE 
+					TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID})
+			)	
+	</insert>
+	
+	<insert id="apply" parameterType="hashmap">
+		<selectKey keyProperty="SK_MEMBER_ID" order="BEFORE" resultType="Integer">
+			SELECT 
+				TT.MEMBER_ID
+			FROM
+				TUTOR_APPLY TA, TUTORING_TUTEE TT
+			WHERE 
+				TA.TUTORING_TUTEE_ID = TT.TUTORING_TUTEE_ID
+			AND
+				APPLY_ID = #{APPLY_ID}			
+		</selectKey>
+		INSERT INTO
+			ALARM
+			(
+				ALARM_ID
+				,MEMBER_ID
+				,ALARMTYPE_ID
+				,ALARM_CHECH
+				,ALARM_LINK
+				,ALARM_CONTENT
+			)
+		VALUES
+			(
+				ALARM_SEQ.NEXTVAL
+				,#{SK_MEMBER_ID}
+				,'11'
+				,'1'
+				,#{TUTORING_TUTEE_ID}
+				,(SELECT 
+					TUTORING_TITLE
+				FROM 
+					TUTORING_TUTEE
+				WHERE 
+					TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID})
+			)			
+	</insert>	
+	
+	<insert id="comment" parameterType="hashmap" keyProperty="SK_MEMBER_ID" >
+		<selectKey keyProperty="SK_MEMBER_ID" order="BEFORE" resultType="Integer" >
+			SELECT 
+				QB.MEMBER_ID
+			FROM 
+				QTBOARD_COMM QC
+				,QTBOARD QB
+			WHERE 
+				QC.QT_ID = QB.QT_ID
+			AND 
+				COMM_ID = #{COMM_ID}
+		</selectKey>
+		INSERT INTO
+			ALARM
+			(
+				ALARM_ID
+				,MEMBER_ID
+				,ALARMTYPE_ID
+				,ALARM_CHECK
+				,ALARM_LINK
+				,ALARM_CONTENT
+			)
+		VALUES
+			(
+				ALARM_SEQ.NEXTVAL
+				,#{SK_MEMBER_ID}
+				,'4'
+				,'1'
+				,#{QT_ID}
+				,(SELECT 
+					TITLE 
+				FROM 
+					QTBOARD 
+				WHERE 
+					QT_ID = #{QT_ID}
+				)
+			)	
+	</insert>	
+	
+	<insert id="commentPar" parameterType="hashmap">
+		<selectKey keyProperty="SK_MEMBER_ID, PAR_COMM_ID" order="BEFORE" resultType="Integer">
+			SELECT 
+				QP.MEMBER_ID, QP.COMM_ID AS PAR_COMM_ID
+			FROM 
+				QTBOARD_COMM QC
+				,QTBOARD_COMM QP
+			WHERE 
+				QC.PAR_COMM_ID = QP.COMM_ID
+			AND 
+				QC.COMM_ID = #{COMM_ID}
+		</selectKey>
+		INSERT INTO
+			ALARM
+			(
+				ALARM_ID
+				,MEMBER_ID
+				,ALARMTYPE_ID
+				,ALARM_CHECK
+				,ALARM_LINK
+				,ALARM_CONTENT
+			)
+		VALUES
+			(
+				ALARM_SEQ.NEXTVAL
+				,#{SK_MEMBER_ID}
+				,'10'
+				,'1'
+				,#{QT_ID}
+				,(SELECT 
+					CONTENT 
+				FROM 
+					QTBOARD_COMM
+				WHERE 
+					COMM_ID = #{PAR_COMM_ID}
+				)
+			)			
+	</insert>
+	
+	<select id="alarmList" parameterType="hashmap" resultType="hashmap">
+		SELECT
+			ALARM_ID
+			,MEMBER_ID
+			,ALARMTYPE_ID
+			,ALARMDATE
+			,ALARM_CHECK
+			,ALARM_LINK
+			,ALARM_CONTENT
+		FROM 
+			ALARM
+		WHERE
+			MEMBER_ID = #{MEMBER_ID}
+		AND
+			ALARM_CHECK = '1'
+		ORDER BY 
+			ALARM_ID DESC
+	</select>
+	
+	<select id="count" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM
+			ALARM
+		WHERE 
+			MEMBER_ID= #{MEMBER_ID}
+		AND
+			ALARM_CHECK = '1'
+	</select>
+	
+	<update id="readCheck" parameterType="hashmap">
+		UPDATE
+			ALARM
+		SET
+			ALARM_CHECK = '0'
+		WHERE 
+			MEMBER_ID = #{MEMBER_ID}		
+	</update>
+</mapper>

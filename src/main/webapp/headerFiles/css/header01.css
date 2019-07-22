@@ -1,0 +1,53 @@
+@charset "UTF-8";
+
+.input-group
+{
+	margin: 0 auto;
+}
+
+.nav-item
+{
+	margin: 0 auto;
+}
+
+.ml-auto
+{
+	margin-left: 50px;
+}
+
+
+..mr-auto
+{
+	margin: 0 auto;
+}
+
+
+/* 로그인 전(로그아웃 상태) */
+
+.nav-item>#topbar-login
+{
+	display: none;
+}
+.nav-item>#topbar-join
+{
+	display: none;
+}
+
+
+
+/* 로그인 후(로그인 상태)  */
+.nav-item>#userDropdown
+{
+	display: -webkit-box;
+}
+.nav-item>#alertsDropdown
+{
+	display: -webkit-box;
+}
+
+
+
+/* 튜터 페이지 */
+
+
+

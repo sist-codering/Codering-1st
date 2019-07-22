@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+		
+<mapper namespace="makingtutoring_tutee">
+	
+	<!-- 튜티장이 개설한 튜터링 insert -->
+	<insert id="insertTutoringTutee">
+		INSERT INTO TUTORING_TUTEE
+				(TUTORING_TUTEE_ID
+				,TUTORING_TITLE
+				,MEMBER_ID
+				,INTRO
+				,ENTIRE_PERIOD
+				,MAX_NUM
+				,MIN_NUM
+				,REG_ID
+				,ENTRY_COST
+				,DEADLINE
+				,TCOMMENT
+				,UPLOAD_DATE)
+	VALUES (TUTORING_TUTEE_SEQ.nextval
+				,#{TUTORING_TITLE}
+				,#{MEMBER_ID}
+				,#{INTRO}
+				,#{ENTIRE_PERIOD}
+				,#{MAX_NUM}
+				,#{MIN_NUM}
+				,#{REG_ID}
+				,#{ENTRY_COST}
+				,TO_DATE(#{DEADLINE},'YYYY-MM-DD')
+				,#{TCOMMENT}
+				,SYSDATE)
+	</insert>
+	
+	
+	<!-- 튜티장이 개설한 튜터링 시간 insert -->
+	<insert id="insertTutoringTuteeTime">
+		INSERT INTO TUTORING_TUTEE_TIME
+					(TIME_ID
+					,TUTORING_TUTEE_ID
+					,TIME_CAT_ID)
+		VALUES 
+					(TUTORING_TUTEE_TIME_SEQ.NEXTVAL
+					,TUTORING_TUTEE_SEQ.CURRVAL
+					,#{TIME_CAT_ID})
+	</insert>
+	
+	<!-- 튜티장이 개설한 튜터링의 권장언어 및 레벨 insert -->
+	<insert id="insertTuteeNeedTech">
+		INSERT INTO TUTEE_NEEDTHCH
+					(NEEDTECH_ID
+					,TUTORING_TUTEE_ID
+					,INTEREST_ID
+					,LEVEL_ID) 
+		VALUES
+					(TUTEE_NEEDTHCH_SEQ.NEXTVAL
+					,TUTORING_TUTEE_SEQ.CURRVAL
+					,#{INTEREST_ID}
+					,#{LEVEL_ID})
+	</insert>
+	
+	<!-- 정적 지역 -->
+	<select id="selectRegion"  resultType="hashmap">
+		SELECT
+			REG_ID,REG_NAME,REG_LAT,REG_LONG
+		FROM
+			REGION
+	</select>
+	
+	<!-- 정적 언어 -->
+	<select id="selectInterest" resultType="hashmap">
+		SELECT 
+			INTEREST_ID,INTEREST_CAT
+		FROM 
+			INTEREST
+		WHERE 
+			CATEGORIE_ID=1
+	</select>
+	
+	<!-- 정적 언어레벨 -->
+	<select id="selectLevel" resultType="hashmap">
+		SELECT 
+			LEVEL_ID,LEVEL_NAME
+		FROM 
+			TECH_LEVEL
+	</select>
+	
+	<!-- 정적 시간 -->
+	<select id="selectTime" resultType="hashmap">
+		SELECT 
+			TIME_CAT_ID,WEEDAY_END,AM_PM
+		FROM 
+			TIME_DIVISION
+	</select>
+	
+	<!-- 지역아이디로 지역이름 검색하기 -->
+	<select id="selectRegionName" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			REG_NAME,REG_LAT,REG_LONG
+		FROM 
+			REGION
+		WHERE 
+			REG_ID = #{REG_ID}
+	</select>
+	
+	<!-- Time아이디로 Time이름 검색하기 -->
+	<select id="selectTimeName" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			WEEDAY_END,AM_PM
+		FROM 
+			TIME_DIVISION
+		WHERE 
+			TIME_CAT_ID = #{TIME_CAT_ID}
+	</select>
+	
+	<!-- 레벨아이디로 레벨이름 검색하기 -->
+	<select id="selectLevelName" parameterType="hashmap" resultType="hashmap">
+		SELECT 
+			LEVEL_NAME
+		FROM 
+			TECH_LEVEL
+		WHERE 
+			LEVEL_ID= #{LEVEL_ID}
+	</select>
+	
+	<!-- 언어아이디로 언어이름 검색하기 -->
+	<select id="selectInterestName" parameterType="hashmap" resultType="hashmap">
+	
+		SELECT 
+			INTEREST_CAT
+		FROM 
+			INTEREST
+		WHERE 
+			CATEGORIE_ID=1 
+			AND INTEREST_ID=#{INTEREST_ID}
+	</select>
+
+	<!-- 튜터 검색 -->
+	<select id="selectRecommandTutor" parameterType="hashmap" resultType="hashmap">
+	<![CDATA[
+		SELECT 
+			TUTOR_ID
+			,TUTOR_NAME
+			,INTRO
+			,(SELECT PROF_PATH
+              FROM TUTEE T
+              WHERE T.MEMBER_ID = TI.MEMBER_ID) AS PROF_PATH
+		FROM 
+			TUTOR_INFO TI
+		WHERE 
+			TUTOR_NAME LIKE '%'||#{TUTOR_NAME}||'%'
+	]]>
+	</select>
+	
+</mapper>

@@ -1,0 +1,283 @@
+@charset "UTF-8";
+
+/* --------------------------------------------------- 기본 css */
+
+/* 컨테이너 - 전체 감싸기 */
+.flex-container {
+   display: flex;
+   flex-direction: column;
+   /* flex-direction: row(기본) | row-reverse | column | column-reverse */
+   justify-content: center;
+   /* justify-content: flex-start(기본) | center | flex-end | space-between | space-around | space-evenly */
+   flex-basis: 100%;
+   height: 100%;
+}
+/* 컨테이너 - 헤더 */
+.flex-container-header {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   flex-basis: 100%;
+   height: 100%;
+}
+/* 컨테이너 - 바디 */
+.flex-container-body {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+}
+/* 컨테이너 - 푸터 */
+.flex-container-footer {
+   display: flex;
+   flex-direction: column;
+   justify-content: center;
+   flex-basis: 100%;
+   height: 100%;
+}
+
+/* 헤더 영역 */
+.header {
+   display: flex;
+   height: 65px;
+   color: white;
+   background-color: #00c73c;
+   border-bottom: 1px solid gray;
+}
+
+/* 헤더 - 탭 영역  */
+.tab {
+   height: 70px;
+   box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.1);
+   background-color: #abc8f7;
+}
+
+/* 본문 영역 */
+.flex-item {
+   display: flex !important;
+   flex-direction: column !important;
+   align-items: center !important;
+   width: 1200px !important;
+}
+
+/* 본문 - 상단 감싸기 */
+.top-content {
+   display: flex;
+   flex-direction: column;
+   width: 80%;
+}
+
+/* 본문 - 상단 영역 (전체 크기 지정) */
+.topmenu {
+   display: flex;
+   flex-direction: row;
+   justify-content: center;
+   border: 1px solid black;
+}
+
+/* 푸터 영역 */
+.footer {
+   display: flex;
+   flex-direction: column;
+   align-items: center;
+   border-top: 1px solid gray;
+   background-color: gray;
+   color: white;
+   flex-basis: 100%;
+}
+/* --------------------------------------------------- 기본 css */
+
+/* 본문 - div 영역 */
+.divTable {
+   display: table;
+   table-layout: fixed;
+   border-collapse: collapse;
+   width: 906px;
+   text-align: left;
+   margin: 50px 0 0 0;
+}
+
+.divTableBody {
+   display: table-row-group;
+}
+
+.divTableRow {
+   display: table-row;
+   border-top: 1px solid #999999;
+   border-bottom: 1px solid #999999;
+   height: 100px;
+}
+
+.divTableHead {
+   display: block;
+   margin: 0 auto;
+   padding: 10px;
+   width: 90px;
+   background-color: #dedede;
+   font-size: 15px;
+   font-weight: bold;
+   text-align: center;
+   vertical-align: middle;
+}
+
+.divTableRow .divTableHead {
+   display: table-cell;
+   /* border-right: 1px solid #999999; */
+   background-color: #fff;
+   color: #333;
+   font-weight: bold;
+   padding: 3px 10px;
+   width: 20%;
+}
+
+.divTableCell {
+   display: table-cell;
+   /* border: 1px solid #999999; */
+   vertical-align: middle;
+}
+
+.divTableHeading {
+   background-color: #EEE;
+   display: table-header-group;
+   font-weight: bold;
+}
+
+.divTableFoot {
+   background-color: #EEE;
+   display: table-footer-group;
+   font-weight: bold;
+}
+
+.block {
+   display: block;
+}
+
+.inline {
+   display: inline;
+}
+
+.flex-end {
+   display: flex;
+   justify-content: flex-end;
+}
+
+/* 글쓰기 버튼 */
+.right {
+   display: flex;
+   justify-content: flex-end;
+   flex-wrap: wrap;
+   margin-right: -15px;
+   margin-left: -15px;
+}
+
+.btn-gray
+{
+   border: 1px solid silver; 
+}
+.bottom-content-between {
+   display: flex;
+   justify-content: space-between;
+   width: 80%;
+}
+
+.bottom-content-center {
+   display: flex;
+   justify-content: center;
+   width: 80%;
+}
+
+.bottommenu {
+   flex-basis: 100%;
+   flex-shrink: 0;
+}
+
+/* 첨부파일 */
+.filebox label {
+   display: inline-block;
+   padding: .5em .75em;
+   color: #c0c0c0;
+   font-size: inherit;
+   line-height: normal;
+   vertical-align: middle;
+   background-color: #808080;
+   cursor: pointer;
+   border: 1px solid #ebebeb;
+   border-bottom-color: #e2e2e2;
+   border-radius: .25em;
+}
+
+.filebox input[type="file"] { /* 파일 필드 숨기기 */
+   position: absolute;
+   width: 1px;
+   height: 1px;
+   padding: 0;
+   margin: -1px;
+   overflow: auto;
+   clip: rect(0, 0, 0, 0);
+   border: 0;
+}
+/* 제목 */
+.styleSubject
+{
+   width: 100%;
+   margin: 10px 0 0 0;
+}
+.CellRadius
+{
+   border-radius: 4px 4px 4px 4px;
+    padding: 2px 2px 2px 2px;
+}
+
+/* 내용 */
+.marginTextArea
+{
+   margin: 20px 0 0 0;
+}
+
+/* 버튼 */
+.marginSave
+{
+   margin: 10px 10px 10px 0;
+}
+
+.marginCancel
+{
+   margin: 10px 0 10px 0;
+}
+
+.top-content 
+{
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 80% !important;
+}
+
+/* ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ→ 버튼 style */
+.QT-styleCancle
+{
+ margin: 0 0 5px 0;
+}
+
+.QT-styleEditDel
+{
+   font-size: 12px;
+}
+.QT-btn-purple
+{
+   background-color: #c655d2 !important;
+    border-color: #c655d2 !important;
+    color: #ffffff !important;
+}
+.QT-btn-white
+{
+   background-color: #ffffff !important;
+    border-color: #000000 !important;
+    color: #000000 !important;
+}
+
+.QT-btn-gray
+{
+   background-color: #c0c0c0!important;
+    border-color: #c0c0c0 !important;
+    color: #ffffff !important;
+}

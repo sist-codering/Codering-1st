@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="tutorApply">
+
+	<!-- 튜터의 지원한 튜터링 목록 조회 -->
+	<select id="selectTutorApplyList" parameterType="hashmap" resultType="hashmap">
+		/* tutorApply.selectTutorApplyList */
+		SELECT 
+			D.TUTOR_NAME
+			, D.INTRO AS TUTOR_INTRO
+			, C.MACH_LV_ID
+			, C.MACH_LV_NAME
+			, A.TUTORING_TITLE
+			, A.TUTORING_TUTEE_ID
+			, B.APPLY_ID
+			, E.REG_NAME
+			, G.INTEREST_CAT
+			, H.LEVEL_NAME  
+			, J.WEEDAY_END
+			, J.AM_PM
+		FROM 
+			TUTORING_TUTEE A
+			, TUTOR_APPLY B 
+			, MACH_LV C
+			, TUTOR_INFO D
+			, REGION E
+			, TUTEE_NEEDTHCH F
+			, INTEREST G
+			, TECH_LEVEL H
+			, TUTORING_TUTEE_TIME I
+			, TIME_DIVISION J
+		WHERE 1=1
+			AND A.TUTORING_TUTEE_ID = B.TUTORING_TUTEE_ID
+			AND B.MACH_LV_ID = C.MACH_LV_ID
+			AND B.TUTOR_ID = D.TUTOR_ID
+			AND A.REG_ID = E.REG_ID
+			AND A.TUTORING_TUTEE_ID = F.TUTORING_TUTEE_ID
+			AND F.INTEREST_ID = G.INTEREST_ID 
+			AND F.LEVEL_ID = H.LEVEL_ID
+			AND A.TUTORING_TUTEE_ID = I.TUTORING_TUTEE_ID
+			AND I.TIME_CAT_ID = J.TIME_CAT_ID
+			AND B.TUTOR_ID = 12
+	</select>
+	
+	<!-- 튜터 지원한 튜터링 삭제 -->
+	<delete id="deleteTutorApplyStatus" parameterType="hashmap">
+		/* tutorApply.deleteTutorApplyStatus */
+		DELETE
+		FROM 
+		    TUTOR_APPLY
+		WHERE 
+		    APPLY_ID = #{APPLY_ID}
+	</delete>
+	
+	<!-- 튜터 지원한 게시판 대화 목록 -->
+	<select id="selectTutorApplyBoard" parameterType="hashmap" resultType="hashmap">
+		/* tutorApply.selectTutorApplyBoard */
+		SELECT 
+		    A.APPLY_ID
+		    , A.WRITER
+		    , A.CONTENT
+		    , TO_CHAR( A.WRITEDATE, 'AM HH12:MI   MM-DD') AS WRITEDATE
+		    , CASE WHEN A.READCHECK = 0 THEN '읽음' ELSE '1' END AS READCHECK
+		    , CASE WHEN WRITER = #{TUTOR_NAME} THEN 'RIGHT' 
+		            ELSE 'LEFT' 
+		    END AS TEXT_ALIGN
+		    , B.MACH_LV_ID
+		FROM 
+		    APPLY_BOARD A
+		    , TUTOR_APPLY B
+		WHERE 
+		    1=1
+		    AND A.APPLY_ID = B.APPLY_ID(+)
+		    AND A.APPLY_ID = 12
+		ORDER BY 
+		    A.WRITEDATE, A.APPLY_BD_ID
+	</select>
+	
+	<!-- 지원 게시판 튜터의 메시지 등록 -->
+	<insert id="insertTutorApplyBoardMsg" parameterType="hashmap">
+		/* tutorApply.insertTutorApplyBoardMsg */
+		INSERT INTO 
+			APPLY_BOARD 
+			(APPLY_BD_ID
+			, APPLY_ID
+			, WRITER
+			, CONTENT
+			, WRITEDATE
+			, READCHECK)
+		VALUES 
+			(APPLY_BOARD_SEQ.NEXTVAL
+			, #{APPLY_ID}
+			, #{TUTOR_NAME}
+			, #{TUTOR_MSG}
+			, SYSDATE
+			, '1')
+	</insert>
+			
+</mapper>
