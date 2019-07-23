@@ -69,19 +69,19 @@
          
             <!-- ① 로그인 전 (로그아웃 상태) 로그인 버튼 -->
             <c:if test="${empty loginInfo }">
-            <a class="nav-link" href="user_loginForm" id="topbar-login" role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="mr-2 d-none d-lg-inline medium text-gray-600">로그인</span>
-            </a>
+	            <a class="nav-link" href="user_loginForm" id="topbar-login" role="button" aria-haspopup="true" aria-expanded="false">
+					<span class="mr-2 d-none d-lg-inline medium text-gray-600">로그인</span>
+	            </a>
             </c:if>
              <!--end 로그인 전 (로그아웃 상태) 로그인 버튼 -->
          
          
             <!-- ② 로그인 후 (로그인 상태) 프로필 -->
             <c:if test="${!empty loginInfo }">
-            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <span class="mr-2 d-none d-lg-inline medium text-gray-600" style="vertical-align: middle;">${loginInfo.NICKNAME }</span>
-              <img class="img-profile rounded-circle" src="${loginInfo.PROF_PATH }" width="50px;">
-            </a>
+	            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					<span class="mr-2 d-none d-lg-inline medium text-gray-600" style="vertical-align: middle;">${loginInfo.NICKNAME }</span>
+					<img class="img-profile rounded-circle" src="${loginInfo.PROF_PATH }" width="50px;">
+	            </a>
            
             <!-- Dropdown - User Information -->
             <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in" aria-labelledby="userDropdown">
