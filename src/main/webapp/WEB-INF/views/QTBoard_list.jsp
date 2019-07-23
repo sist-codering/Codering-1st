@@ -143,44 +143,86 @@
 								<ul class="pagination justify-content-center">${paging}</ul>
 							</nav>
 						</div>
+						
+						
+						<!-- 본문 하단 : bottom-comtent -->
+						<div class="bottom-content-between">
+						
+							<!-- 검색 -->
+							<div>
+								<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="<%=cp%>/qtboard_list">
+									<div class="input-group-prepend mb-3 d-flex justify-content-end row align-items-start">
+										<!-- 검색 분류 -->
+										<select name="searchKey" class="selectFiled custom-select">
+											<option value="TITLE" selected="selected">제목</option>
+											<option value="NICKNAME">닉네임</option>
+											<option value="CONTENT">내용</option>
+										</select>
+										
+										<div class="input-group">
+											<input type="text" id="btnSearch" class="form-control" placeholder="검색어를 입력하세요." aria-label="Search" aria-describedby="basic-addon2" name="searchValue">
+											<div class="input-group-append">
+												<button class="btn btn-primary" type="submit">
+													<i class="fas fa-search"></i>
+												</button>
+											</div>
+										</div>
+									</div>						
+								</form>
+							</div>
+
+							<div>
+							<button type="button" class="btn btn-primary" onclick="javascript:location.href='<%=cp%>/qtboard_create';">글쓰기</button>
+							</div> 
+						</div>
+						<!-- end bottom-content -->
 
 					</div>
 					<!-- end middle menu -->
 				</div>
 				<!-- end middle-content -->
-
+				
+				
+<%-- 			
 				<!-- 본문 하단 : bottom-comtent -->
 				<div class="bottom-content-between">
 
 					<!-- 검색 -->
-					<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="<%=cp%>/qtboard_list">
-						<div class="input-group-prepend mb-3 d-flex justify-content-end row align-items-start">
+					<div>
+						<form class="d-none d-md-inline-block form-inline ml-auto mr-0 mr-md-3 my-2 my-md-0" action="<%=cp%>/qtboard_list">
+							<div class="input-group-prepend mb-3 d-flex justify-content-end row align-items-start">
 								<!-- 검색 분류 -->
 								<select name="searchKey" class="selectFiled custom-select">
 									<option value="TITLE" selected="selected">제목</option>
 									<option value="NICKNAME">닉네임</option>
 									<option value="CONTENT">내용</option>
 								</select>
-				
+								
 								<div class="input-group">
-									<input type="text" id="btnSearch" class="form-control" 
-									placeholder="검색어를 입력하세요." aria-label="Search"
-									aria-describedby="basic-addon2" name="searchValue">
+									<input type="text" id="btnSearch" class="form-control" placeholder="검색어를 입력하세요." aria-label="Search" aria-describedby="basic-addon2" name="searchValue">
 									<div class="input-group-append">
 										<button class="btn btn-primary" type="submit">
 											<i class="fas fa-search"></i>
 										</button>
 									</div>
 								</div>
-							</div>
-					</form>
+							</div>						
+						</form>
+					</div>
+					
+					<div>
+						<button type="button" class="btn btn-primary" onclick="javascript:location.href='<%=cp%>/qtboard_create';">글쓰기</button>
+					</div> 
 				</div>
+				
 				<!-- end bottom-content -->
 
 				<!-- 글쓰기 버튼 -->
 				<div>
 					<button type="button" class="btn btn-primary" onclick="javascript:location.href='<%=cp%>/qtboard_create';">글쓰기</button>
-				</div>
+				</div>  
+--%>
+				
 			</div>
 			<!-- End flex-item -->
 
