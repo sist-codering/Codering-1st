@@ -11,31 +11,35 @@
 
 <!-- 전체 영역 : container -->
 <div class="flex-container" id="wrapper">
-   <!-- 헤더 영역 : flex-container-header -->
-   <div class="flex-container-header d-flex flex-column content-wrapper">      
 
-   <!-- 헤더 : header -->   
-   <div id="content">
-      <!-- Top bar -->
-      <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top fixed-top">
+	<!-- 헤더 시작 -->
+	<div class="flex-container-header d-flex flex-column content-wrapper">      
+
+	<!-- 헤더 : header -->   
+	<div id="content">
+
+	<!-- Top bar -->
+	<nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top fixed-top">
            
-         <!-- Sidebar Toggle (Topbar) -->
-            <div id="sidebar">
-            <c:import url="Header_Sidebar.jsp"></c:import>
-            </div>
-                
-                
-         <!-- Topbar Search -->
-         <form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
-           <!--  <div class="input-group">
-                 <input type="text" class="form-control bg-light border-0 small search-group" placeholder="검색어를 입력하세요." aria-label="Search" aria-describedby="basic-addon2">
-               <div class="input-group-append">
-                  <button class="btn btn-primary" type="button">
-                    <i class="fas fa-search fa-sm"></i>
-                  </button>
-               </div>
-            </div>                          -->                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-         </form>
+		<!-- Sidebar Toggle (Topbar) -->
+		<div id="sidebar">
+			<c:import url="Header_Sidebar.jsp"></c:import>
+		</div>
+                             
+		<!-- Topbar Search -->
+		<!-- 
+		<form class="d-none d-sm-inline-block form-inline mr-auto ml-md-3 my-2 my-md-0 mw-100 navbar-search">
+			<div class="input-group">
+				<input type="text" class="form-control bg-light border-0 small search-group" placeholder="검색어를 입력하세요." aria-label="Search" aria-describedby="basic-addon2">
+				
+				<div class="input-group-append">
+					<button class="btn btn-primary" type="button">
+						<i class="fas fa-search fa-sm"></i>
+					</button>
+				</div>
+			</div>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+		</form> 
+		-->
       
          <ul class="navbar-nav">
 
@@ -43,16 +47,21 @@
             <a class="nav-link dropdown-toggle" href="#" id="searchDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
               <i class="fas fa-search fa-fw"></i>
             </a>
-            <!-- Dropdown - Messages -->
-            <div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
-               <form class="form-inline mr-auto w-100 navbar-search">
-                  <div class="input-group">
-                     <input type="text" class="form-control bg-light border-0 small" placeholder="검색어를 입력하세요." aria-label="Search" aria-describedby="basic-addon2">
-                     <div class="input-group-append"><button class="btn btn-primary" type="button"><i class="fas fa-search fa-sm"></i></button></div>
-                  </div>
-               </form>
-            </div>
-         </li>
+            
+			<!-- Dropdown - Messages -->
+			<div class="dropdown-menu dropdown-menu-right p-3 shadow animated--grow-in" aria-labelledby="searchDropdown">
+				<form class="form-inline mr-auto w-100 navbar-search">
+					<div class="input-group">
+						<input type="text" class="form-control bg-light border-0 small" placeholder="검색어를 입력하세요." aria-label="Search" aria-describedby="basic-addon2">
+						<div class="input-group-append">
+							<button class="btn btn-primary" type="button">
+								<i class="fas fa-search fa-sm"></i>
+							</button>
+						</div>
+					</div>
+				</form>
+			</div>
+		</li>
             
             
          <!-- Nav Item - User Information -->
@@ -103,14 +112,14 @@
 
             <!-- Nav Item - Alerts -->
            
-        	 <li class="nav-item dropdown no-arrow mx-1">
+			<li class="nav-item dropdown no-arrow mx-1">
+           
             <!-- ① 로그인 전 (로그아웃 상태) 회원가입 -->
             <c:if test="${empty loginInfo }">
-            <a class="nav-link" href="user_openSignUp" id="topbar-join" role="button" aria-haspopup="true" aria-expanded="false">
-              <span class="mr-2 d-none d-lg-inline medium text-gray-600">회원가입</span>
-            </a>
+	            <a class="nav-link" href="user_openSignUp" id="topbar-join" role="button" aria-haspopup="true" aria-expanded="false">
+	              <span class="mr-2 d-none d-lg-inline medium text-gray-600">회원가입</span>
+	            </a>
             </c:if>
-            <!-- end 로그인 전 (로그아웃 상태) 회원가입 -->
          
          
             <!-- ② 로그인 후(로그인 상태) 알림 -->
@@ -161,30 +170,37 @@
              
              </ul>
       </nav>
-      <!-- End of Topbar -->
+
 
    </div>
-   <!-- end Main Content -->
+
 
    </div>
-   <!-- end 헤더 영역 : flex-container-header -->
+   <!-- 헤더 끝 -->
+
       
-   <!-- Logout Modal-->
-   <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-         <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="exampleModalLabel">로그아웃 하시겠습니까?</h5>
-              <button class="close" type="button" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">×</span>
-              </button>
-            </div>
-              <div class="modal-body">로그아웃 버튼을 누르면 안전하게 로그아웃 됩니다.</div>
-            <div class="modal-footer">
-              <button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
-              <a class="btn btn-primary" href="logout">로그아웃</a>
-            </div>
-         </div>
-      </div>
-   </div>
+	<!-- Logout Modal-->
+	<div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">로그아웃 하시겠습니까?</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				
+				<div class="modal-body">
+					로그아웃 버튼을 누르면 안전하게 로그아웃 됩니다.
+				</div>
+				
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button" data-dismiss="modal">취소</button>
+					<a class="btn btn-primary" href="logout">로그아웃</a>
+				</div>
+			</div>
+		</div>
+	</div>
+   
 </div>
