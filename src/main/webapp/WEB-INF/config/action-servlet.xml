@@ -33,18 +33,15 @@
 	<!--       따라서, 『*.css』와 같은 컨트롤러에 매핑되어 있지 않은 URL 요청은 --> 
 	<!--       최종적으로 디폴트 서블릿에 전달되어 처리된다. -->
 	<mvc:default-servlet-handler />
-
 	<!-- ○ Annotation 활성화 -->
 	<!--    → 위 mvc:annotation-driven 과 동일한 기능을 갖고 있지만 -->
 	<!--    → 이 방식의 장점 중 하나는 --> 
     <!--       @Autowired와 @Qualifier Annotation을 인식할 수 있다는 것이다. -->
-   
 	<mvc:annotation-driven>
 		<mvc:argument-resolvers>
 			<bean class="codering.common.resolver.CustomMapArgumentResolver"/>		
 		</mvc:argument-resolvers>
 	</mvc:annotation-driven>
-	
 	
 	<!-- log4j 를 활용하기 위해 DispatheServlet 에 들어가는 request를 인터셉트 -->
 	<mvc:interceptors>
