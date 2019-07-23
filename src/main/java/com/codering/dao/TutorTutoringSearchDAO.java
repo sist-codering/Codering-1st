@@ -58,5 +58,43 @@ public class TutorTutoringSearchDAO extends AbstractDAO {
 		List<Map<String, Object>> list = selectList("tutorTutoringSearch.selectTutorTutoringSearchList2", map);
 		return list;
 	}
+	
+	//튜티가 개설한 튜터링에 대해서 시간조회
+	public List<Map<String,Object>> selectTimeDivision(Map<String,Object> map)
+	{
+		return selectList("tutorTutoringSearch.selectTimeDivision",map);
+	}
+	
+	//튜티가 개설한 튜터링에 대한 정보 조회
+	public Map<String,Object> selectTutoringTutee(Map<String,Object> map)
+	{
+		return (Map<String, Object>) selectOne("tutorTutoringSearch.selectTutoringTutee",map);
+	}
+	
+	//튜티가 개설한 튜터링 예약하기
+	public void insertTutoringReservation(Map<String,Object> map)
+	{
+		insert("tutorTutoringSearch.insertTutoringReservation",map);
+	}
+	
+	//튜티장이 개설한 튜터링에 예약했는지 여부 확인
+	public int selectReservationCount(Map<String,Object> map)
+	{
+		return (int) selectOne("tutorTutoringSearch.selectReservationCount",map);
+	}
+	
+	//튜티장이 개설한 튜터링에 튜터로 지원했는지 확인
+	public int selectTutorApply(Map<String,Object> map)
+	{
+		return (int) selectOne("tutorTutoringSearch.selectApplyCount",map);
+	}
+	
+	//튜티장이 개설한 튜터링에 튜터로 지원하기
+	public void insertTutorApply(Map<String,Object> map)
+	{
+		insert("tutorTutoringSearch.insertTutorApply",map);
+	}
+	
+	
 
 }

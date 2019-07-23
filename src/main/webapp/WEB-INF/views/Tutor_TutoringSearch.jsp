@@ -20,7 +20,7 @@
 <style type="text/css">
 body {
 	margin-top: 20px;
-	background: #eee;
+	background: white;
 }
 
 .avatar.avatar-xl {

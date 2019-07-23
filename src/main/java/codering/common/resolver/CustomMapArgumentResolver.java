@@ -41,19 +41,19 @@ public class CustomMapArgumentResolver implements HandlerMethodArgumentResolver
 		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 		
 		// 로그인세션이 존재한다면 그것을 commandMap에도 담음
-		Map<String, Object> loginInfo = (Map<String, Object>) request.getSession().getAttribute("loginInfo");
 		
-		if(loginInfo != null)
-		{
-			commandMap.put("loginInfo", loginInfo);
-			commandMap.put("MEMBER_ID", loginInfo.get("MEMBER_ID"));
-			commandMap.put("NICKNAME", loginInfo.get("NICKNAME"));
-			commandMap.put("TUTOR_ID", loginInfo.get("TUTOR_ID"));
-			commandMap.put("TUTOR_NAME", loginInfo.get("TUTOR_NAME"));
-			
-			// 현재 알람이 몇개인지 확인하여 세션에 넣기
-			request.getSession().setAttribute("alarmCount", alarmDao.selectAlarmCount(commandMap.getMap()));
-		}		
+		  Map<String, Object> loginInfo = (Map<String, Object>)
+		  request.getSession().getAttribute("loginInfo");
+		  
+		  if(loginInfo != null) { commandMap.put("loginInfo", loginInfo);
+		  commandMap.put("MEMBER_ID", loginInfo.get("MEMBER_ID"));
+		  commandMap.put("NICKNAME", loginInfo.get("NICKNAME"));
+		  commandMap.put("TUTOR_ID", loginInfo.get("TUTOR_ID"));
+		  commandMap.put("TUTOR_NAME", loginInfo.get("TUTOR_NAME"));
+		  
+		  // 현재 알람이 몇개인지 확인하여 세션에 넣기 request.getSession().setAttribute("alarmCount",
+		  alarmDao.selectAlarmCount(commandMap.getMap()); }
+		 
 		
 		// 파라메터들을 수신하여 commandMap에 담는 과정
 		Enumeration<?> enumeration = request.getParameterNames();		
