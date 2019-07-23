@@ -42,9 +42,6 @@ public class MainServiceImpl implements MainService
 				String[] lang= ((String) a.get("INTEREST_ID")).split(",");
 				String[] lv = ((String) a.get("LEVEL_ID")).split(",");
 				
-				System.out.println(lang[0]);
-				System.out.println(lv[0]);
-				
 				String select = "";
 				
 				for(int j=0;j<lang.length;j++)
@@ -70,9 +67,6 @@ public class MainServiceImpl implements MainService
 				
 				String[] lang= ((String) a.get("INTEREST_ID")).split(",");
 				String[] lv = ((String) a.get("LEVEL_ID")).split(",");
-				
-				System.out.println(lang[0]);
-				System.out.println(lv[0]);
 				
 				String select = "";
 				
