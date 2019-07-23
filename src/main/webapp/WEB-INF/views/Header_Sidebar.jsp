@@ -15,15 +15,10 @@
 <!--  <button id="sidebarToggleTop" class="btn btn-link rounded-circle mr-3">
         		<span class="fas fa-bars"></span>
        </button>
-        -->
-       
-       
-       
-       
-
+-->
 <c:choose>
 <c:when test="${empty loginInfo }">
-<div class="sidebar" id="sidebar1" style="color: white; width: 350px;">
+<div class="sidebar" id="sidebar1" style="color: white; width: 350px; background-color: black;">
 
 	<div class="row row-sidebar" style="margin-top: 90px; background: black;">
 		<div class="col-4"></div>
@@ -31,6 +26,7 @@
 			<span style="background-image: url(  );" class="avatar avatar-xl mr-3 span-sidebar"></span>
 		</div>
 	</div>
+	
 	<div class="row row-sidebar" style="background: black; display:inline-block; padding:0px;">
 		<div class="text-center">
 			<p>로그인 후 모든 기능을 이용하세요</p>
