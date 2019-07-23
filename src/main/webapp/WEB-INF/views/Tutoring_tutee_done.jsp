@@ -84,7 +84,7 @@
       <div class="col-lg-8">
 
         <!-- Title -->
-        <h1 class="mt-4">웹 프로그래밍 같이 시작하실 분~!!!</h1>
+        <h1 class="mt-4">${selectTutoringTutee.TUTORING_TITLE }</h1>
 
         <!-- Author -->
         <p class="lead">
@@ -95,7 +95,7 @@
         <hr>
 
         <!-- Date/Time -->
-        <p style="font-size: small;">2019-07-15 12:00 PM 작성</p>
+        <p style="font-size: small;">${selectTutoringTutee.UPLOAD_DATE } 작성</p>
 
         <hr>
 
@@ -107,24 +107,12 @@
 	        	<p class="lead" style="font-weight: bold;">튜터링 소개</p>
 	        </div>
 			<div class="col-xs-12 col-sm-9">
-		        <p class="subcontent">웹 프로그래밍 함께 공부하실 분 찾습니다~!!!
-		        
-		        소수정예로 8주 이내로 공부하고 싶습니다. 저도 초급 레벨이기 때문에 기초부터 탄탄히 하실 분들 구해요.</p>
-		
-		        <p class="subcontent">[커리큘럼]<br>
-				1. 기본 문장 구성<br>
-				-be동사/일반동사 평서문/부정문/의문문<br>
-				-시제1 (현재/과거/미래)<br>
-				-시제2 (진행형)<br>
-				-질문하기 & 복습<br>
-					:</p>
+		        <p class="subcontent">${selectTutoringTutee.INTRO }</p>
 					
-					
-				<p>
+				
 					<ul class="subcontent">
 						<li><span class="fas fa-check"></span>&nbsp;&nbsp;&nbsp;&nbsp;JAVA 초급, Oracle SQL 초급 권장</li>
 					</ul> 
-				</p>
 			</div>
 		</div>
 		

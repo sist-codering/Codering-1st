@@ -189,7 +189,7 @@
 		,SYSDATE)
 	</insert>
 	
-	<select id="selectReservationCount" resultType="hashmap" parameterType="hashmap">
+	<select id="selectReservationCount" resultType="java.lang.Integer" parameterType="hashmap">
 			SELECT 
 				COUNT(RESERVATION_ID)
 			FROM
@@ -239,7 +239,7 @@
 	
 	
 	<!-- 튜티장이 개설한 튜터링에 튜터지원을 했는지 여부 확인 -->
-	<select id="selectTutorApply" resultType="hashmap" parameterType="hashmap">
+	<select id="selectApplyCount" resultType="java.lang.Integer" parameterType="hashmap">
 		SELECT 
 			COUNT(APPLY_ID)
 		FROM 
