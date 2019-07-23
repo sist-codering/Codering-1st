@@ -64,7 +64,7 @@
 
 
 <c:when test="${empty loginInfo.TUTOR_ID }">
-<div class="sidebar"  id="sidebar2" style="color: white; height: 100%;">
+<div class="sidebar" id="sidebar2" style="color: white; height: 100%; background-color: black;">
 
 	<div class="row row-sidebar" style="margin-top: 90px; background: black;">
 		<div class="col-4"></div>
@@ -130,7 +130,7 @@
 
 
 <c:otherwise>
-<div class="sidebar" id="sidebar3" style="color: white; height: 100%;">
+<div class="sidebar" id="sidebar3" style="color: white; height: 100%; background-color: black;">
 
 	<div class="row row-sidebar" style="margin-top: 90px; background: black;">
 		<div class="col-4"></div>
