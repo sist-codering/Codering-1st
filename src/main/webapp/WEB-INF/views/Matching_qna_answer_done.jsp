@@ -252,7 +252,7 @@
 	function sentAnswer() 
 	{
 		var FAQ_ID = $("input[name=faqId]").val();
-
+		
 		$.ajax({
 			type : "POST",
 			url : "<c:url value='/tutee_qnapage_answer_ajax' />",
@@ -261,6 +261,8 @@
 			success : function(data)
 			{
 				var strDone = "";
+				
+				console.log(data);
 				
 				for (var i = 0; i < data.length; i++)
 				{
@@ -279,8 +281,9 @@
 					strDone += "			</div>";
 					strDone += "	</div>";
 					strDone += "</div>";
-					
 				}
+				
+				alert(strDone);
 			
 				$("#askAns").html(strDone);
 				
