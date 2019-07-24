@@ -95,6 +95,28 @@ public class TutorTutoringSearchDAO extends AbstractDAO {
 		insert("tutorTutoringSearch.insertTutorApply",map);
 	}
 	
+	//튜티장이 개설한 튜터링의 최소 권장 레벨
+	public List<Map<String,Object>> selectTuteeNeedTech(Map<String,Object> map)
+	{
+		return selectList("tutorTutoringSearch.selectTuteeNeedTech",map);
+		
+	}
+	
+	public int selectTotReservationCount(Map<String,Object> map)
+	{
+		return (int) selectOne("tutorTutoringSearch.selectTotReservationCount",map);
+		
+	}
+	
+	public void deleteReservation(Map<String,Object> map)
+	{
+		delete("tutorTutoringSearch.deleteReservation", map);
+	}
+	
+	public void deleteApply(Map<String,Object> map)
+	{
+		delete("tutorTutoringSearch.deleteApply",map);
+	}
 	
 	
 

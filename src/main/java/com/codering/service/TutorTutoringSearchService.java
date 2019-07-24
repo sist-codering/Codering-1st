@@ -24,4 +24,7 @@ public interface TutorTutoringSearchService {
 	
 	public void insertReservation(Map<String,Object> map);
 
+	public void deleteReservation(Map<String,Object> map);
+	
+	public void deleteApply(Map<String,Object> map);
 }
