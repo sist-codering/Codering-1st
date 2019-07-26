@@ -70,7 +70,8 @@ public class CustomMapArgumentResolver implements HandlerMethodArgumentResolver
 			}
 			// 담아놓은 commandMap 반납
 			return commandMap;
-		}
+	
+	}
 		return loginInfo;
 	}
 }

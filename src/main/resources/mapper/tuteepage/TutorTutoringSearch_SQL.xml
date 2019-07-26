@@ -216,6 +216,8 @@
 		SELECT TUTORING_TUTEE_ID
 		       ,TUTORING_TITLE
 		       ,MEMBER_ID
+		       ,(SELECT PROF_PATH FROM TUTEE  WHERE MEMBER_ID = T.MEMBER_ID ) AS PROF_PATH
+		       ,(SELECT NICKNAME FROM TUTEE  WHERE MEMBER_ID = T.MEMBER_ID) AS NICKNAME
 		       ,INTRO
 		       ,ENTIRE_PERIOD
 		       ,MIN_NUM
@@ -231,9 +233,9 @@
 		       ,INTEREST_ID
 		       ,LEVEL_ID
 		FROM
-			 TUTORING_TUTEE_VIEW
+			 TUTORING_TUTEE_VIEW T
 		WHERE 
-			TUTORING_TUTEE_ID=#{TUTORING_TUTEE_ID}
+			T.TUTORING_TUTEE_ID=#{TUTORING_TUTEE_ID}
 			
 	</select>
 	
@@ -255,6 +257,45 @@
 		VALUE 
 			(TUTOR_APPLY_SEQ.NEXTVAL,#{TUTOR_ID},#{TUTORING_TUTEE_ID},SYSDATE,3)
 	</insert>
+	
+	<!-- 튜티장이 개설한 튜터링의 최소 권장레벨 -->
+	<select id="selectTuteeNeedTech" resultType="hashmap" parameterType="hashmap">
+		SELECT TUTORING_TUTEE_ID
+				,INTEREST_CAT
+				,LEVEL_NAME
+		FROM TUTEE_NEEDTHCH T JOIN INTEREST I
+				ON T.INTEREST_ID = I.INTEREST_ID JOIN TECH_LEVEL TL
+				                                ON T.LEVEL_ID = TL.LEVEL_ID AND T.TUTORING_TUTEE_ID = #{TUTORING_TUTEE_ID}
+	</select>
+	
+	<!-- 튜티장이 개설한 튜터링에 예약한 총 인원 -->
+	<select id="selectTotReservationCount" resultType="java.lang.Integer" parameterType="hashmap">
+		SELECT 
+			COUNT(RESERVATION_ID)
+		FROM
+			TUTORING_RESERVATION
+		WHERE 
+			TUTORING_TUTEE_ID=#{TUTORING_TUTEE_ID}
+	</select>
+	
+	<!-- 문의내용 출력하기 -->
+	
+	<delete id="deleteReservation">
+		DELETE
+		FROM 
+			TUTORING_RESERVATION
+		WHERE 
+			TUTORING_TUTOR_ID = #{TUTORING_TUTOR_ID} AND MEMBER_ID = #{MEMBER_ID}
+	</delete>
+	
+	<delete id="deleteApply">
+		DELETE
+		FROM 
+			TUTOR_APPLY
+		WHERE 
+			TUTORING_TUTOR_ID = #{TUTORING_TUTOR_ID} AND TUTOR_ID = #{TUTOR_ID}
+	</delete>
+	
 	
 	
 </mapper>

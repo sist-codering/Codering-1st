@@ -139,6 +139,8 @@ public class TutorTutoringSearchServiceImpl implements TutorTutoringSearchServic
 	    resultMap.put("selectTutoringTime", tutorTutoringSearchDAO.selectTimeDivision(map));
 	    resultMap.put("selectApplyCount", applyCount);
 	    resultMap.put("selectReservationCount", reservationCount);
+		resultMap.put("selectTuteeNeedTech", tutorTutoringSearchDAO.selectTuteeNeedTech(map));
+	    resultMap.put("selectTotReservationCount",tutorTutoringSearchDAO.selectTotReservationCount(map));
 		
 		return resultMap;
 	}
@@ -151,5 +153,15 @@ public class TutorTutoringSearchServiceImpl implements TutorTutoringSearchServic
 	public void insertReservation(Map<String,Object> map)
 	{
 		tutorTutoringSearchDAO.insertTutoringReservation(map);
+	}
+	
+	public void deleteApply(Map<String,Object> map)
+	{
+		tutorTutoringSearchDAO.deleteApply(map);
+	}
+	
+	public void deleteReservation(Map<String,Object> map)
+	{
+		tutorTutoringSearchDAO.deleteReservation(map);
 	}
 }
