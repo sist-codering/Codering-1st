@@ -37,6 +37,8 @@ public class CustomMapArgumentResolver implements HandlerMethodArgumentResolver
 			NativeWebRequest webRequest, WebDataBinderFactory binderFactory) throws Exception
 	{
 		CommandMap commandMap = new CommandMap();
+		
+		log.debug("===============================  커맨드맵 진입");
 
 		HttpServletRequest request = (HttpServletRequest) webRequest.getNativeRequest();
 
@@ -54,7 +56,7 @@ public class CustomMapArgumentResolver implements HandlerMethodArgumentResolver
 
 			// 현재 알람이 몇개인지 확인하여 세션에 넣기 request.getSession().setAttribute("alarmCount",
 			alarmDao.selectAlarmCount(commandMap.getMap());
-
+		}
 			// 파라메터들을 수신하여 commandMap에 담는 과정
 			Enumeration<?> enumeration = request.getParameterNames();
 			String key = null;
@@ -71,7 +73,6 @@ public class CustomMapArgumentResolver implements HandlerMethodArgumentResolver
 			// 담아놓은 commandMap 반납
 			return commandMap;
 	
-	}
-		return loginInfo;
+		
 	}
 }
