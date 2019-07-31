@@ -92,7 +92,7 @@
 
 	$(function()
 	{
-		$("#datepicker1, #datepicker2").datepicker();
+		$("#datepicker1, #datepicker2, #datepicker3, #datepicker4, #datepicker5, #datepicker6").datepicker();
 	});
 	
 	
@@ -130,48 +130,63 @@
 		});
 		*/
 		
+
 		
-		// 경력 추가하기 버튼 클릭 시, 입력창 생성
-		$("#add-button").click(function()
+		// 경력 목록 추가/삭제
+		// 첫번째 추가하기 버튼
+		$("#add-button01").click(function()
 		{
-			var tag = "	 <div class='row'>" 
-					  + "	<div class='col-3'> <span class='bold'></span>"
-					  + "	</div>"
-					  + "	<div class='col-8'>"
-					  + "		<div class='row row-career'>"
-					  + "			<div class='col-12 col-career'>"
-					  + "				<input type='text' id='datepicker1' value='' "
-					  + "				 readonly='readonly' placeholder='시작 날짜'"
-					  + "				 style='width: 38%'> ~ <input type='text' id='datepicker2' value=''"
-					  + "				 readonly='readonly' placeholder='종료 날짜' style='width: 38%'>"
-					  + "			</div>"
-					  + "			<div class='tutorProfileReviseBox col-8 col-career'>"
-					  + "				<input type='text' class='form-control' value=''"
-					  + "				id='tutorname' placeholder='경력사항을 입력하세요.'>"
-					  + "			</div>"
-					  + "			<div class='tutorProfileReviseBox col-4 col-career'>"
-					  + "				<button type='button' class='btn btn-primary' id='add-button'>삭제하기</button>"
-					  + "			</div>"
-					  + "		</div>"
-					  + "	</div>"
-					  + "</div>";
-			
-			//text함수를 적용하여 html함수를 사용했던 같은 내용의 문자열을 표출해본다.
-			$("#tag-html").before(tag);	
+			$("#add02").show();
+			$("#add-button01").hide();
+			$("#del-button01").show();
 		});
 		
-		
-		
-		$("#delete-career").click(function()
+		// 두번째 추가하기 버튼
+		$("#add-button02").click(function()
 		{
-			var rowid = "'#"+ $("#delete-career").parents(".del-car").attr("id") + "'";
-			
-			alert(rowid);
-			
-			$(rowid).css.attr("display", "none");
-			
+			$("#add03").show();
+			$("#add-button02").hide();
+			$("#del-button02").show();
 		});
 		
+		// 첫번째 삭제하기 버튼 (내용 삭제)
+		$("#del-button01").click(function()
+		{
+			var $dates = $("#datepicker1, #datepicker2").datepicker();
+			$dates.datepicker("setDate", null);
+			$("#career01").val("");
+		});
+				
+		// 두번째 삭제하기 버튼 (내용 삭제)
+		$("#del-button02").click(function()
+		{
+			var $dates = $("#datepicker3, #datepicker4").datepicker();
+			$dates.datepicker("setDate", null);
+			$("#career02").val("");
+		});
+				
+		// 세번째 삭제하기 버튼 (내용 삭제)
+		$("#del-button03").click(function()
+		{
+			var $dates = $("#datepicker5, #datepicker6").datepicker();
+			$dates.datepicker("setDate", null);
+			$("#career03").val("");
+		});
+				
+		
+		// 경력 불러오기
+		var careerCount = $('input[name=careerCount]').val();
+		
+		// 경력 두 개 or 세 개일 때 
+		// 두번째 목록까지 나올 수 있도록 첫번째 추가하기 버튼 자동 클릭
+		if(careerCount == 2)
+		{
+			$("#add-button01").trigger("click");
+		}
+		else if(careerCount == 3)
+		{
+			$("#add-button02").trigger("click");
+		}
 		
 		
 		
@@ -296,9 +311,6 @@
 	<br>
 
 	<!-- 전화번호 -->
-	
-
-
 	<div class="row">
 		<div class="col-3">
 			<span class="bold">전화번호</span>
@@ -317,7 +329,6 @@
 	<br>
 
 	<!-- 레벨설정 -->
-
 	<div class="row">
 		<div class="col-3">
 			<span class="bold">레벨설정</span>
@@ -367,6 +378,72 @@
 			<span class="bold">경력</span>
 		</div>
 		<div class="col-8">
+		<span style="color: red; font-weight: bold;"> &nbsp;&nbsp;&nbsp; ※ 경력은 최대 3개까지 입력 가능합니다.</span>
+		<input type="hidden" name="careerCount" value="${careerCount }" >	
+			<div class="row row-career" id="add01">
+				<div class="col-12 col-career">
+					<input type="text" id="datepicker1" value="${career[0].CAREER_START }" 
+						readonly="readonly" placeholder="시작 날짜"
+						style="width: 38%"> ~ <input type="text" id="datepicker2" value="${career[0].CAREER_END }"
+						readonly="readonly" placeholder="종료 날짜" style="width: 38%">
+				</div>
+				<div class="tutorProfileReviseBox col-8 col-career">
+					<input type="text" class="form-control" value="${career[0].CAREER_CONTENT }"
+						id="career01" placeholder="경력사항을 입력하세요.">
+				</div>
+				<div class="tutorProfileReviseBox col-4 col-career">
+					<button type="button" class="btn btn-primary" id="add-button01">추가하기</button>
+					<button type="button" class="btn btn-primary" id="del-button01" style="display: none;">삭제하기</button>
+				</div>
+			</div>
+			<div class="row row-career" id="add02" style="display: none;">
+				<div class="col-12 col-career">
+					<input type="text" id="datepicker3" value="${career[1].CAREER_START }"
+						readonly="readonly" placeholder="시작 날짜"
+						style="width: 38%"> ~ <input type="text" id="datepicker4" value="${career[1].CAREER_END }"
+						readonly="readonly" placeholder="종료 날짜" style="width: 38%">
+				</div>
+				<div class="tutorProfileReviseBox col-8 col-career">
+					<input type="text" class="form-control" value="${career[1].CAREER_CONTENT }"
+						id="career02" placeholder="경력사항을 입력하세요.">
+				</div>
+				<div class="tutorProfileReviseBox col-4 col-career">
+					<button type="button" class="btn btn-primary" id="add-button02">추가하기</button>
+					<button type="button" class="btn btn-primary" id="del-button02" style="display: none;">삭제하기</button>
+				</div>
+			</div>
+			<div class="row row-career" id="add03" style="display: none;" >
+				<div class="col-12 col-career">
+					<input type="text" id="datepicker5" value="${career[2].CAREER_START }"
+						readonly="readonly" placeholder="시작 날짜"
+						style="width: 38%"> ~ <input type="text" id="datepicker6" value="${career[2].CAREER_END }"
+						readonly="readonly" placeholder="종료 날짜" style="width: 38%" >
+				</div>
+				<div class="tutorProfileReviseBox col-8 col-career">
+					<input type="text" class="form-control" value="${career[2].CAREER_CONTENT }"
+						id="career03" placeholder="경력사항을 입력하세요.">
+				</div>
+				<div class="tutorProfileReviseBox col-4 col-career">
+					<button type="button" class="btn btn-primary" id="del-button03">삭제하기</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<%-- 
+	<div class="row">
+		<div class="col-3">
+			<span class="bold">경력</span>
+		</div>
+		<div class="col-8">
 			<c:forEach var="career" items="${career }" varStatus="status">
 				<div class="row row-career del-car" id="${status.count}" >
 					<div class="col-12 col-career">
@@ -405,13 +482,13 @@
 						id="tutorname" placeholder="경력사항을 입력하세요.">
 				</div>
 				<div class="tutorProfileReviseBox col-4 col-career">
-					<button type="button" class="btn btn-primary" id="add-button" ${careerCount >= 3 ? 'disabled="disabled"' : ''}>추가하기</button>
+					<button type="button" class="btn btn-primary" id="add-button" ${careerCount >= 3 ? 'disabled="disabled"' : ''}>삭제하기</button>
 				</div>
 				<span style="color: red; font-weight: bold; ${careerCount >= 3 ? 'display: inline;' : 'display:none;'} "> &nbsp;&nbsp;&nbsp; ※ 경력은 최대 3개까지 입력 가능합니다.</span>
 			</div>
 		</div>
 	</div>
-
+ --%>
 	<br>
 
 
