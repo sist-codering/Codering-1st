@@ -12,7 +12,7 @@
 			, T.PHONENUM
 		FROM TUTOR_INFO F, TUTEE T
 		WHERE 
-			F.TUTOR_ID = #{TUTOR_ID}
+			T.MEMBER_ID = #{MEMBER_ID}
 		  AND 
 		  	F.MEMBER_ID = T.MEMBER_ID
 	</select>
@@ -24,6 +24,8 @@
 			, R.INTEREST_CAT
 			, L.LEVEL_NAME
 			, I.TUTOR_INTEREST_ID
+			, L.LEVEL_ID
+			, R.INTEREST_ID
 		FROM 
 			TUTOR_INTEREST I
 			, INTEREST R
@@ -133,7 +135,7 @@
 			INTEREST_ID = #{INTEREST_ID};
 	</delete>
 	
-	<!-- 튜터 관심사(언어_ 및 레벨 등록 -->
+	<!-- 튜터 관심사(언어) 및 레벨 등록 -->
 	<insert id="interestInsert" parameterType="hashmap">
 		INSERT 
 			INTO 
@@ -178,8 +180,46 @@
 					, #{CAREER_END}
 					, #{CAREER_CONTENT}
 	</insert>
-
-		
+	
+	<delete id="linkDelete" parameterType="hashmap">
+	
+		DELETE
+		FROM 
+			TUTOR_LINK
+		WHERE 
+			TUTOR_ID =#{TUTOR_ID}
+	
+	</delete>
+	
+	
+	<insert id="linkInsert" parameterType="hashmap">
+		INSERT 
+			INTO 
+				TUTOR_LINK
+					(LINK_ID
+					, TUTOR_ID
+					, LINK_CAT_ID
+					, LINK_ADDR)
+			VALUES
+				(TUTOR_LINK_SEQ.NEXTVAL
+				, #{TUTOR_ID}
+				, #{LINK_CAT_ID}
+				, #{LINK_ADDR})
+	</insert>
+	
+	
+	<!-- 튜터 기본 정보 수정 -->
+	<update id="updateTutorInfo" parameterType="hashmap">
+		UPDATE 
+			TUTOR_INFO
+		SET 
+			TUTOR_NAME = #{TUTOR_NAME}
+			, TELEPHONE = #{TELEPHONE}
+			, INTRO = #{INTRO}
+		WHERE 
+			MEMBER_ID = #{MEMBER_ID}
+	</update>	
+	
 	
 	
 

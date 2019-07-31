@@ -38,7 +38,6 @@ public class TuteeMatchingController
 		ModelAndView mav = new ModelAndView("mypage_tuteeOpen");
 		
 		// 세션이 없는 상태이므로 임의로 값을 넣어 테스트
-		commandMap.put("MEMBER_ID", "3");
 		
 		Map<String, Object> resultMap = service.selectTuteeOpen(commandMap.getMap());
 				
@@ -411,7 +410,6 @@ public class TuteeMatchingController
 	public void insertQnaAnswer(CommandMap commandMap, HttpServletResponse response) throws IOException 
 	{
 		service.insertQnaAnswer(commandMap.getMap());
-		
 		response.getWriter().print("");
 	}
 	
