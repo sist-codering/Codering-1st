@@ -51,6 +51,8 @@ public class TutorProfileController
 		mav.addObject("careerCount", resultMap.get("careerCount"));
 		mav.addObject("category", resultMap.get("category"));
 		mav.addObject("link", resultMap.get("link"));	
+		mav.addObject("linkCount", resultMap.get("linkCount"));	
+		
 		
 		return mav;
 	}

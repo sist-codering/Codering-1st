@@ -125,6 +125,16 @@
 		  	L.LINK_CAT_ID = C.LINK_CAT_ID
 	</select>	
 	
+	<!-- 튜터 링크 개수 조회 -->
+	<select id="linkCount" parameterType="hashmap" resultType="Integer">
+		SELECT 
+			COUNT(*)
+		FROM 
+			TUTOR_LINK
+		WHERE 
+			TUTOR_ID = #{TUTOR_ID}
+	</select>
+	
 	
 	<!-- 튜터 관심사(언어) 및 레벨 삭제 -->
 	<delete id="interestDelete" parameterType="hashmap">
@@ -181,6 +191,7 @@
 					, #{CAREER_CONTENT}
 	</insert>
 	
+	<!-- 튜터 링크 삭제 -->
 	<delete id="linkDelete" parameterType="hashmap">
 	
 		DELETE
@@ -191,7 +202,7 @@
 	
 	</delete>
 	
-	
+	<!-- 튜터 링크 입력 -->
 	<insert id="linkInsert" parameterType="hashmap">
 		INSERT 
 			INTO 

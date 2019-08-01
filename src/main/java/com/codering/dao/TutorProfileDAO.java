@@ -44,6 +44,13 @@ public class TutorProfileDAO extends AbstractDAO
 	{
 		return (List<Map<String, Object>>) selectList("tutorprofile.link", map);
 	}
+	
+	public int selectTutorLinkCount(Map<String, Object> map)
+	{
+		return (int) selectOne("tutorprofile.linkCount", map);
+	}
+	
+	
 
 	
 	

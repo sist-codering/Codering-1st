@@ -26,6 +26,7 @@ public class TutorProfileServiceImpl implements TutorProfileService
 		resultMap.put("career", dao.selectTutorCareer(map));
 		resultMap.put("careerCount", dao.selectTutorCareerCount(map));
 		resultMap.put("category", dao.selectTutorCategory(map));
+		resultMap.put("linkCount", dao.selectTutorLinkCount(map));
 		resultMap.put("link", dao.selectTutorLink(map));
 				
 		return resultMap;
@@ -61,6 +62,12 @@ public class TutorProfileServiceImpl implements TutorProfileService
 		return 0;
 	}
 
+	@Override
+	public int selectTutorLinkCount(Map<String, Object> map)
+	{
+		return 0;
+	}
+
 	
 	public void updateTutorInterest(Map<String, Object> map)
 	{
@@ -87,6 +94,7 @@ public class TutorProfileServiceImpl implements TutorProfileService
 	{
 		dao.updateTutorInfo(map);
 	}
+
 	
 	
 	
