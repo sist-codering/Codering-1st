@@ -59,6 +59,11 @@ public class TutorProfileDAO extends AbstractDAO
 		delete("tutorprofile.deleteInterest", map);
 	}
 	
+	public void deleteTutorCategory(Map<String, Object> map)
+	{
+		delete("tutorprofile.deleteCategory", map);
+	}
+	
 	public void deleteTutorCareer(Map<String, Object> map)
 	{
 		delete("tutorprofile.deleteCareer", map);
@@ -73,15 +78,19 @@ public class TutorProfileDAO extends AbstractDAO
 	
 	public void insertTutorInterest(Map<String, Object> map)
 	{
-		delete("tutorprofile.interestInsert", map);
+		insert("tutorprofile.interestInsert", map);
+	}
+	public void insertTutorCategory(Map<String, Object> map)
+	{
+		insert("tutorprofile.categoryInsert", map);
 	}
 	public void insertTutorCareer(Map<String, Object> map)
 	{
-		delete("tutorprofile.careerInsert", map);
+		insert("tutorprofile.careerInsert", map);
 	}
 	public void insertTutorLink(Map<String, Object> map)
 	{
-		delete("tutorprofile.linkInsert", map);
+		insert("tutorprofile.linkInsert", map);
 	}
 	
 	

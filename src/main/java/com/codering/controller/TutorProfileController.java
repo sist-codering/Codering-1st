@@ -63,6 +63,7 @@ public class TutorProfileController
 	{
 		service.updateTutorInfo(commandMap.getMap());
 		service.updateTutorInterest(commandMap.getMap());
+		service.updateTutorCategory(commandMap.getMap());
 		service.updateTutorCareer(commandMap.getMap());
 		service.updateTutorLink(commandMap.getMap());
 		

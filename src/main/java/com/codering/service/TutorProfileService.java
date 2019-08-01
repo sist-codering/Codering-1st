@@ -16,7 +16,7 @@ public interface TutorProfileService
 	public void updateTutorCareer(Map<String, Object> map);
 	public void updateTutorLink(Map<String, Object> map);
 	public void updateTutorInterest(Map<String, Object> map);
-	
+	public void updateTutorCategory(Map<String, Object> map);
 	
 	public void updateTutorInfo(Map<String, Object> map);
 	

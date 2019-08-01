@@ -136,13 +136,16 @@
 	</select>
 	
 	
+
 	<!-- 튜터 관심사(언어) 및 레벨 삭제 -->
 	<delete id="interestDelete" parameterType="hashmap">
 		DELETE
 		FROM 
 			TUTOR_INTEREST
 		WHERE 
-			INTEREST_ID = #{INTEREST_ID};
+		    TUTOR_ID = #{TUTOR_ID}
+		  AND 
+		    LEVEL_ID IS NOT NULL
 	</delete>
 	
 	<!-- 튜터 관심사(언어) 및 레벨 등록 -->
@@ -162,6 +165,33 @@
 	</insert>
 	
 	
+	<!-- 튜터 카테고리 삭제 -->
+	<delete id="categoryDelete" parameterType="hashmap">
+		DELETE
+		FROM 
+			TUTOR_INTEREST
+		WHERE 
+		    TUTOR_ID = #{TUTOR_ID}
+		  AND 
+		    LEVEL_ID IS NULL
+	</delete>
+	
+	
+	<!-- 튜터 카테고리 입력 -->
+	<insert id="categoryInsert" parameterType="hashmap">
+		INSERT 
+			INTO 
+				TUTOR_INTEREST
+					(TUTOR_INTEREST_ID
+					, TUTOR_ID
+					, INTEREST_ID)
+			VALUES
+				(TUTOR_INTEREST_SEQ.NEXTVAL
+				, #{TUTOR_ID}
+				, #{INTEREST_ID})
+	</insert>
+	
+	
 	<!-- 튜터 경력 삭제 -->
 	<delete id="careerDelete" parameterType="hashmap">
 		DELETE
@@ -169,8 +199,6 @@
 			TUTOR_CAREER
 		WHERE 
 			TUTOR_ID = #{TUTOR_ID}
-		  AND 
-		  	CAREER_ID = #{CAREER_ID
 	</delete>
 	
 	<!-- 튜터 경력 입력 -->
@@ -198,7 +226,7 @@
 		FROM 
 			TUTOR_LINK
 		WHERE 
-			TUTOR_ID =#{TUTOR_ID}
+			TUTOR_ID = #{TUTOR_ID}
 	
 	</delete>
 	

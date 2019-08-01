@@ -68,19 +68,28 @@ public class TutorProfileServiceImpl implements TutorProfileService
 		return 0;
 	}
 
-	
+	// 튜터 관심사 수정
 	public void updateTutorInterest(Map<String, Object> map)
 	{
 		dao.deleteTutorCareer(map);
 		dao.insertTutorCareer(map);
 	}
-	
+
+	// 튜터 카테고리 수정
+	public void updateTutorCategory(Map<String, Object> map)
+	{
+		dao.deleteTutorCategory(map);
+		dao.insertTutorCategory(map);
+	}
+
+	// 튜터 경력 수정
 	public void updateTutorCareer(Map<String, Object> map)
 	{
 		dao.deleteTutorCareer(map);
 		dao.insertTutorCareer(map);
 	}
 	
+	// 튜터 링크 수정
 	public void updateTutorLink(Map<String, Object> map)
 	{
 		dao.deleteTutorCareer(map);
@@ -88,8 +97,7 @@ public class TutorProfileServiceImpl implements TutorProfileService
 	}
 	
 
-
-	@Override
+	// 튜터 기본정보 수정
 	public void updateTutorInfo(Map<String, Object> map)
 	{
 		dao.updateTutorInfo(map);
