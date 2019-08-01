@@ -213,7 +213,6 @@
 		// 링크 추가 버튼 클릭 시, 입력창 생성
 		$("#add-link01").click(function()
 		{
-			alert("클릭");
 			$("#link02").show();
 			$("#add-link01").hide();
 			$("#del-link01").show();
@@ -250,7 +249,6 @@
 		// 링크 불러오기
 		// 링크 개수에 따라 show/hide 결정 
 		var linkCount = $('input[name=linkCount]').val();
-		alert(linkCount);
 
 		if(linkCount == 2)
 		{
