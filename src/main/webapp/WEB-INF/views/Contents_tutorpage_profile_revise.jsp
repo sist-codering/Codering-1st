@@ -130,6 +130,7 @@
 		});
 		*/
 		
+		
 
 		
 		// 경력 목록 추가/삭제
@@ -189,8 +190,24 @@
 		}
 		
 		
-		
-		
+		// 언어 및 레벨 불러오기
+	 	var interestLength = $("input[name='interestId']").length;
+	    var interestId = new Array(interestLength);
+	    var levelId = new Array(interestLength);
+	    
+	    for(var i=0; i<interestLength; i++)
+	    {                          
+	    	interestId[i] = $("input[name='interestId']")[i].value;
+	    	levelId[i] = $("input[name='interestId']")[i].value;
+	    }
+
+		for (var i = 0; i < interestLength; i++)
+		{
+			$('#lang-select option').eq(interestId[i]).prop('selected', true);
+			$('#lvl-select option').eq(levelId[i]).prop('selected', true);
+			
+			$("#add-lang").trigger("click");	////
+		}
 		
 		// 언어 및 레벨 추가하기 버튼 클릭 시, 입력창 생성
 		$("#add-lang").click(function()
@@ -199,7 +216,7 @@
 			var lvl = $("#lvl-select option:selected").text();
 			
 			var tag = "	<div class='alert alert-dismissible alert-secondary tutorProfileButtons1'>"
-					  + "<button type='button' class='close' data-dismiss='alert'>&times;</button>"
+					  + "<button type='button' class='close' data-dismiss='alert' >&times;</button>"
 					  + lang + " " + lvl
 					  + "</div>";
 					  
@@ -364,11 +381,17 @@
 		<div class="col-7" id="tag-lang">
 			
 			<c:forEach var="interest" items="${interest }">
+				<input type="hidden" name="interestId" value="${interest.INTEREST_ID }" >
+				<input type="hidden" name="levelId" value="${interest.LEVEL_ID }">
+			</c:forEach>
+<%-- 			<c:forEach var="interest" items="${interest }">
 				<div class="alert alert-dismissible alert-secondary tutorProfileButtons1">
 					<button type="button" class="close" data-dismiss="alert" id="${interest.TUTOR_INTEREST_ID }">&times;</button>
 					${interest.INTEREST_CAT } ${interest.LEVEL_NAME }
 				</div>
-			</c:forEach>
+				<input type="hidden" name="interestCat" value="${interest.INTEREST_CAT }" >
+				<input type="hidden" name="levelName">
+			</c:forEach> --%>
 					
 		</div>
 	</div>
